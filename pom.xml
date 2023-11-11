@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.wferreiracosta.louis</groupId>
 	<artifactId>louis</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>louis</name>
 	<description>Banking Correspondent API</description>
 	<properties>
