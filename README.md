@@ -4,4 +4,4 @@
  
 ## About
 
-This project is an API for a simple banking correspondent, handling the registration of users and retailers, as well as processing transactions.
+This project is an API for a simple banking correspondent, handling the registration of users and merchants, as well as processing transactions.
