@@ -5,3 +5,7 @@
 ## About
 
 This project is an API for a simple banking correspondent, handling the registration of users and retailers, as well as processing transactions.
+
+## UML Diagram
+
+![Database](docs\diagram-database.png)
