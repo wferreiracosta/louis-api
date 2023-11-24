@@ -1,7 +1,9 @@
 package br.com.wferreiracosta.louis.controllers;
 
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
-import br.com.wferreiracosta.louis.utils.tests.ControllerTest;
+import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.repositories.UserRepository;
+import br.com.wferreiracosta.louis.utils.ControllerTest;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
+import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCNPJ;
+import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCPF;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,6 +30,9 @@ class UserControllerTest extends ControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private UserRepository repository;
+
     @BeforeEach
     void setUp() {
         gson = new Gson();
@@ -36,7 +43,7 @@ class UserControllerTest extends ControllerTest {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                "12345678996",
+                generateRandomCNPJ(),
                 "wesley@mail.com",
                 "123"
         );
@@ -62,7 +69,7 @@ class UserControllerTest extends ControllerTest {
         final var user = new UserDTO(
                 "",
                 "Silva",
-                "12345678996",
+                generateRandomCNPJ(),
                 "wesley@mail.com",
                 "123"
         );
@@ -84,10 +91,10 @@ class UserControllerTest extends ControllerTest {
     @Test
     void testingSaveUserMerchantWithSurnameBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Daniel",
                 "",
-                "12345678996",
-                "wesley@mail.com",
+                generateRandomCNPJ(),
+                "daniel@mail.com",
                 "123"
         );
 
@@ -134,7 +141,7 @@ class UserControllerTest extends ControllerTest {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                "12345678996",
+                generateRandomCNPJ(),
                 "",
                 "123"
         );
@@ -156,10 +163,10 @@ class UserControllerTest extends ControllerTest {
     @Test
     void testingSaveUserMerchantWithPasswordBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Pedro",
                 "Silva",
-                "12345678996",
-                "wesley@mail.com",
+                generateRandomCNPJ(),
+                "pedro@mail.com",
                 ""
         );
 
@@ -178,11 +185,75 @@ class UserControllerTest extends ControllerTest {
     }
 
     @Test
+    void testingSaveUserMerchantWithDocumentDuplicate() throws Exception {
+        final var user = new UserDTO(
+                "Nando",
+                "Silva",
+                generateRandomCNPJ(),
+                "nando@mail.com",
+                "123"
+        );
+
+        final var entity = UserEntity.builder()
+                .name("Nando")
+                .surname("Silva")
+                .document(user.document())
+                .email("nando123@mail.com")
+                .build();
+        repository.save(entity);
+
+        final var request = MockMvcRequestBuilders
+                .post(MERCHANTS_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
+                .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this document"));
+    }
+
+    @Test
+    void testingSaveUserMerchantWithEmailDuplicate() throws Exception {
+        final var user = new UserDTO(
+                "Nando",
+                "Silva",
+                generateRandomCNPJ(),
+                "nando@mail.com",
+                "123"
+        );
+
+        final var entity = UserEntity.builder()
+                .name("Nando")
+                .surname("Silva")
+                .document(generateRandomCNPJ())
+                .email(user.email())
+                .build();
+        repository.save(entity);
+
+        final var request = MockMvcRequestBuilders
+                .post(MERCHANTS_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
+                .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));
+    }
+
+    @Test
     void testingSaveUserCommon() throws Exception {
         final var user = new UserDTO(
                 "Wendel",
                 "Silva",
-                "96123456789",
+                generateRandomCPF(),
                 "wendel@mail.com",
                 "123"
         );
@@ -208,8 +279,8 @@ class UserControllerTest extends ControllerTest {
         final var user = new UserDTO(
                 "",
                 "Silva",
-                "12345678996",
-                "wesley@mail.com",
+                generateRandomCPF(),
+                "tiago@mail.com",
                 "123"
         );
 
@@ -230,10 +301,10 @@ class UserControllerTest extends ControllerTest {
     @Test
     void testingSaveUserCommonWithSurnameBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Denis",
                 "",
-                "12345678996",
-                "wesley@mail.com",
+                generateRandomCPF(),
+                "denis@mail.com",
                 "123"
         );
 
@@ -280,7 +351,7 @@ class UserControllerTest extends ControllerTest {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                "12345678996",
+                generateRandomCPF(),
                 "",
                 "123"
         );
@@ -302,10 +373,10 @@ class UserControllerTest extends ControllerTest {
     @Test
     void testingSaveUserCommonWithPasswordBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Carlos",
                 "Silva",
-                "12345678996",
-                "wesley@mail.com",
+                generateRandomCPF(),
+                "carlos@mail.com",
                 ""
         );
 
@@ -321,6 +392,70 @@ class UserControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value("Validation error"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("password"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your password is mandatory"));
+    }
+
+    @Test
+    void testingSaveUserCommonWithDocumentDuplicate() throws Exception {
+        final var user = new UserDTO(
+                "Anderson",
+                "Silva",
+                generateRandomCPF(),
+                "anderson@mail.com",
+                "123"
+        );
+
+        final var entity = UserEntity.builder()
+                .name("Anderson")
+                .surname("Silva")
+                .document(user.document())
+                .email("anderson123@mail.com")
+                .build();
+        repository.save(entity);
+
+        final var request = MockMvcRequestBuilders
+                .post(MERCHANTS_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
+                .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this document"));
+    }
+
+    @Test
+    void testingSaveUserCommonWithEmailDuplicate() throws Exception {
+        final var user = new UserDTO(
+                "Anderson",
+                "Silva",
+                generateRandomCPF(),
+                "anderson@mail.com",
+                "123"
+        );
+
+        final var entity = UserEntity.builder()
+                .name("Anderson")
+                .surname("Silva")
+                .document(generateRandomCPF())
+                .email(user.email())
+                .build();
+        repository.save(entity);
+
+        final var request = MockMvcRequestBuilders
+                .post(MERCHANTS_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
+                .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));
     }
 
 }
