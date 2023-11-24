@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends ControllerTest {
 
     private final String MERCHANTS_API = "/users/merchants";
+    private final String COMMON_API = "/users/common";
 
     private Gson gson;
 
@@ -47,7 +49,7 @@ class UserControllerTest extends ControllerTest {
 
         this.mvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name").value(user.name()))
                 .andExpect(jsonPath("$.surname").value(user.surname()))
                 .andExpect(jsonPath("$.document").value(user.document()))
@@ -163,6 +165,152 @@ class UserControllerTest extends ControllerTest {
 
         final var request = MockMvcRequestBuilders
                 .post(MERCHANTS_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("password"))
+                .andExpect(jsonPath("$.errors[0].message").value("Filling in your password is mandatory"));
+    }
+
+    @Test
+    void testingSaveUserCommon() throws Exception {
+        final var user = new UserDTO(
+                "Wendel",
+                "Silva",
+                "96123456789",
+                "wendel@mail.com",
+                "123"
+        );
+
+        final var request = MockMvcRequestBuilders
+                .post(COMMON_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.name").value(user.name()))
+                .andExpect(jsonPath("$.surname").value(user.surname()))
+                .andExpect(jsonPath("$.document").value(user.document()))
+                .andExpect(jsonPath("$.type").value(COMMON.name()))
+                .andExpect(jsonPath("$.email").value(user.email()));
+    }
+
+    @Test
+    void testingSaveUserCommonWithNameBlank() throws Exception {
+        final var user = new UserDTO(
+                "",
+                "Silva",
+                "12345678996",
+                "wesley@mail.com",
+                "123"
+        );
+
+        final var request = MockMvcRequestBuilders
+                .post(COMMON_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("name"))
+                .andExpect(jsonPath("$.errors[0].message").value("Filling in your name is mandatory"));
+    }
+
+    @Test
+    void testingSaveUserCommonWithSurnameBlank() throws Exception {
+        final var user = new UserDTO(
+                "Wesley",
+                "",
+                "12345678996",
+                "wesley@mail.com",
+                "123"
+        );
+
+        final var request = MockMvcRequestBuilders
+                .post(COMMON_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("surname"))
+                .andExpect(jsonPath("$.errors[0].message").value("Filling in your surname is mandatory"));
+    }
+
+    @Test
+    void testingSaveUserCommonWithDocumentBlank() throws Exception {
+        final var user = new UserDTO(
+                "Wesley",
+                "Silva",
+                "",
+                "wesley@mail.com",
+                "123"
+        );
+
+        final var request = MockMvcRequestBuilders
+                .post(COMMON_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
+                .andExpect(jsonPath("$.errors[0].message").value("Filling in your document is mandatory"));
+    }
+
+    @Test
+    void testingSaveUserCommonWithEmailBlank() throws Exception {
+        final var user = new UserDTO(
+                "Wesley",
+                "Silva",
+                "12345678996",
+                "",
+                "123"
+        );
+
+        final var request = MockMvcRequestBuilders
+                .post(COMMON_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(user));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
+                .andExpect(jsonPath("$.errors[0].message").value("Filling in your email is mandatory"));
+    }
+
+    @Test
+    void testingSaveUserCommonWithPasswordBlank() throws Exception {
+        final var user = new UserDTO(
+                "Wesley",
+                "Silva",
+                "12345678996",
+                "wesley@mail.com",
+                ""
+        );
+
+        final var request = MockMvcRequestBuilders
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));

@@ -52,5 +52,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(BAD_REQUEST).body(err);
     }
 
+    @ExceptionHandler(DataViolationException.class)
+    public ResponseEntity<StandardError> data(final DataViolationException e) {
+        final var err = StandardError.builder()
+                .status(BAD_REQUEST.value())
+                .message(e.getLocalizedMessage())
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        return ResponseEntity.status(BAD_REQUEST).body(err);
+    }
 
 }

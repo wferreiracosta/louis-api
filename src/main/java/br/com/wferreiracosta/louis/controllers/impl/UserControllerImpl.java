@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
+import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +23,12 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public UserEntity saveMerchant(@Valid @RequestBody final UserDTO dto) {
-        return service.saveMerchant(dto);
+        return service.save(dto, MERCHANT);
+    }
+
+    @Override
+    public UserEntity saveCommon(@Valid @RequestBody UserDTO dto) {
+        return service.save(dto, COMMON);
     }
 
 }
