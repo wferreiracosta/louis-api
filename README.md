@@ -18,7 +18,24 @@ This project is an API for a simple banking correspondent, handling the registra
 
 🧪 **TDD (Test-Driven Development)**: Prioritizing quality from the outset, we've adopted TDD to ensure system stability and a seamless experience for users.
 
-🔍 *Postgresql*: The strategic choice of Postgresql ensures data integrity, enabling reliable management of sensitive information.
+🔍 *PostgreSQL*: The strategic choice of Postgresql ensures data integrity, enabling reliable management of sensitive information.
+
+## Getting Started
+
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/wferreiracosta/jonah-api.git
+    ```
+
+2. **Build and Run with Docker**:
+    ```bash
+    docker-compose up --build
+    ```
+
+3. **Access the API**:
+   ```
+   http://localhost:8080/swagger-ui/index.html
+   ```
 
 ## UML Diagram
 
