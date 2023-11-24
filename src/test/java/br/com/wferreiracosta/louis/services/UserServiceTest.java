@@ -4,7 +4,7 @@ import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.services.impl.UserServiceImpl;
-import br.com.wferreiracosta.louis.utils.tests.ServiceTest;
+import br.com.wferreiracosta.louis.utils.ServiceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,7 +27,7 @@ class UserServiceTest extends ServiceTest {
     }
 
     @Test
-    void testingSaveMerchant() {
+    void testingSave() {
         final var wesley = new UserDTO(
                 "Wesley",
                 "Silva",
@@ -46,7 +46,7 @@ class UserServiceTest extends ServiceTest {
 
         when(repository.save(entity)).thenReturn(entity);
 
-        final var entitySaved = service.saveMerchant(wesley);
+        final var entitySaved = service.save(wesley, MERCHANT);
 
         assertEquals(wesley.name(), entitySaved.getName());
         assertEquals(wesley.document(), entitySaved.getDocument());

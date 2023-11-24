@@ -17,11 +17,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public UserEntity saveMerchant(final UserDTO dto) {
+    public UserEntity save(final UserDTO dto, final UserType type) {
         final var entity = new UserEntity(dto);
-        entity.setType(UserType.MERCHANT);
+        entity.setType(type);
         return repository.save(entity);
     }
-
 
 }

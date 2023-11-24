@@ -1,8 +1,10 @@
 package br.com.wferreiracosta.louis.models.dtos;
 
+import br.com.wferreiracosta.louis.annotations.UserValidator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
+@UserValidator
 public record UserDTO(
 
         @Schema(description = "Username", example = "Pedro")

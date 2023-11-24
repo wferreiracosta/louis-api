@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.repositories;
 
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
-import br.com.wferreiracosta.louis.utils.tests.RepositoryTest;
+import br.com.wferreiracosta.louis.utils.RepositoryTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;

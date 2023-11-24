@@ -31,4 +31,21 @@ public interface UserController {
     })
     UserEntity saveMerchant(UserDTO dto);
 
+    @PostMapping("/common")
+    @ResponseStatus(CREATED)
+    @Operation(
+            summary = "Insert a new common user",
+            description = "Insert a common user"
+    )
+    @ApiResponse(responseCode = "201", content = {
+            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "404", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "500", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    UserEntity saveCommon(UserDTO dto);
+
 }

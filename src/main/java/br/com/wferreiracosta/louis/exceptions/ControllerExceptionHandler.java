@@ -52,5 +52,4 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(BAD_REQUEST).body(err);
     }
 
-
 }

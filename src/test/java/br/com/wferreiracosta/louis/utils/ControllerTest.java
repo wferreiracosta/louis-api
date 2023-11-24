@@ -1,4 +1,4 @@
-package br.com.wferreiracosta.louis.utils.tests;
+package br.com.wferreiracosta.louis.utils;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
