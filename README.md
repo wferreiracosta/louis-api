@@ -39,4 +39,4 @@ This project is an API for a simple banking correspondent, handling the registra
 
 ## UML Diagram
 
-![Database](docs\diagram-database.png)
+![Database](docs/diagram-database.png)
