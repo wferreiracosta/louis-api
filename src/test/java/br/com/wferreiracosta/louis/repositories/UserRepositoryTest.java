@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
+import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
+import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCNPJ;
+import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCPF;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserRepositoryTest extends RepositoryTest {
@@ -21,8 +24,8 @@ class UserRepositoryTest extends RepositoryTest {
     void testingFindById() {
         final var entity = UserEntity.builder()
                 .name("Wesley")
-                .document("12345678996")
-                .type(COMMON)
+                .document(generateRandomCNPJ())
+                .type(MERCHANT)
                 .email("wesley@mail.com")
                 .password("123")
                 .build();
@@ -43,15 +46,15 @@ class UserRepositoryTest extends RepositoryTest {
     void testingFindAll() {
         final var wesley = UserEntity.builder()
                 .name("Wesley")
-                .document("12345678996")
-                .type(COMMON)
+                .document(generateRandomCNPJ())
+                .type(MERCHANT)
                 .email("wesley@mail.com")
                 .password("123")
                 .build();
         final var pedro = UserEntity.builder()
                 .name("Pedro")
-                .document("98765432136")
-                .type(COMMON)
+                .document(generateRandomCNPJ())
+                .type(MERCHANT)
                 .email("pedro@mail.com")
                 .password("123")
                 .build();
@@ -70,8 +73,8 @@ class UserRepositoryTest extends RepositoryTest {
     void testingSave() {
         final var entity = UserEntity.builder()
                 .name("Wesley")
-                .document("12345678996")
-                .type(COMMON)
+                .document(generateRandomCNPJ())
+                .type(MERCHANT)
                 .email("wesley@mail.com")
                 .password("123")
                 .build();
@@ -85,5 +88,106 @@ class UserRepositoryTest extends RepositoryTest {
         assertEquals(entity.getPassword(), entitySaved.getPassword());
     }
 
+    @Test
+    void testingFindByDocumentReturnUser() {
+        final var wesley = UserEntity.builder()
+                .name("Wesley")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email("wesley@mail.com")
+                .password("123")
+                .build();
+        final var pedro = UserEntity.builder()
+                .name("Pedro")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email(generateRandomCNPJ())
+                .password("123")
+                .build();
+
+        testEntityManager.persist(wesley);
+        testEntityManager.persist(pedro);
+
+        final var result = repository.findByDocument(wesley.getDocument());
+
+        assertTrue(result.isPresent());
+        assertEquals(result.get(), wesley);
+    }
+
+    @Test
+    void testingFindByDocumentReturnEmpty() {
+        final var wesley = UserEntity.builder()
+                .name("Wesley")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email("wesley@mail.com")
+                .password("123")
+                .build();
+        final var pedro = UserEntity.builder()
+                .name("Pedro")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email("pedro@mail.com")
+                .password("123")
+                .build();
+
+        testEntityManager.persist(wesley);
+        testEntityManager.persist(pedro);
+
+        final var result = repository.findByDocument(generateRandomCNPJ());
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void testingFindByEmailReturnUser() {
+        final var wesley = UserEntity.builder()
+                .name("Wesley")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email("wesley@mail.com")
+                .password("123")
+                .build();
+        final var pedro = UserEntity.builder()
+                .name("Pedro")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email(generateRandomCNPJ())
+                .password("123")
+                .build();
+
+        testEntityManager.persist(wesley);
+        testEntityManager.persist(pedro);
+
+        final var result = repository.findByEmail(wesley.getEmail());
+
+        assertTrue(result.isPresent());
+        assertEquals(result.get(), wesley);
+    }
+
+    @Test
+    void testingFindByEmailReturnEmpty() {
+        final var wesley = UserEntity.builder()
+                .name("Wesley")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email("wesley@mail.com")
+                .password("123")
+                .build();
+        final var pedro = UserEntity.builder()
+                .name("Pedro")
+                .document(generateRandomCPF())
+                .type(COMMON)
+                .email("pedro@mail.com")
+                .password("123")
+                .build();
+
+        testEntityManager.persist(wesley);
+        testEntityManager.persist(pedro);
+
+        final var result = repository.findByDocument("teste@teste.com");
+
+        assertFalse(result.isPresent());
+    }
 
 }

@@ -16,6 +16,7 @@ import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCNPJ;
 import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCPF;
+import static java.util.List.of;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -249,6 +250,39 @@ class UserControllerTest extends ControllerTest {
     }
 
     @Test
+    void testingFindMerchantsUsersPageable() throws Exception {
+        final var anderson = UserEntity.builder()
+                .name("Anderson")
+                .surname("Silva")
+                .document(generateRandomCNPJ())
+                .email("anderson123@mail.com")
+                .type(MERCHANT)
+                .build();
+
+        final var adilson = UserEntity.builder()
+                .name("Adilson")
+                .surname("Silva")
+                .document(generateRandomCPF())
+                .email("adilson123@mail.com")
+                .type(COMMON)
+                .build();
+
+        repository.saveAll(of(anderson, adilson));
+
+        final var request = MockMvcRequestBuilders
+                .get(MERCHANTS_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages").value("1"))
+                .andExpect(jsonPath("$.last").value(true))
+                .andExpect(jsonPath("$.numberOfElements").value("1"))
+                .andExpect(jsonPath("$.totalElements").value("1"));
+    }
+
+    @Test
     void testingSaveUserCommon() throws Exception {
         final var user = new UserDTO(
                 "Wendel",
@@ -408,12 +442,12 @@ class UserControllerTest extends ControllerTest {
                 .name("Anderson")
                 .surname("Silva")
                 .document(user.document())
-                .email("anderson123@mail.com")
+                .email("anderson.silva@mail.com")
                 .build();
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -445,7 +479,7 @@ class UserControllerTest extends ControllerTest {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
