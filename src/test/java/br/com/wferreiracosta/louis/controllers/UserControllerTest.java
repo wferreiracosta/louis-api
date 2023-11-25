@@ -3,7 +3,7 @@ package br.com.wferreiracosta.louis.controllers;
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
-import br.com.wferreiracosta.louis.utils.ControllerAnnotations;
+import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserControllerTest extends ControllerAnnotations {
+class UserControllerTest extends ControllerTestAnnotations {
 
     private final String MERCHANTS_API = "/users/merchants";
     private final String MERCHANTS_PAGE_API = "/users/merchants/page";

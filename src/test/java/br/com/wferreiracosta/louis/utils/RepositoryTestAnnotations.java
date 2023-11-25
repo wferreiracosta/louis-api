@@ -10,5 +10,5 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(locations = {"classpath:application-test.properties"})
-public class RepositoryAnnotations {
+public class RepositoryTestAnnotations {
 }

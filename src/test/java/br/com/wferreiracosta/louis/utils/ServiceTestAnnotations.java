@@ -1,13 +1,13 @@
 package br.com.wferreiracosta.louis.utils;
 
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
 @TestPropertySource(locations = {"classpath:application-test.properties"})
-public class ControllerAnnotations {
+public class ServiceTestAnnotations {
+
 }
