@@ -14,8 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
-import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCNPJ;
-import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCPF;
+import static br.com.wferreiracosta.louis.utils.Generator.cnpj;
+import static br.com.wferreiracosta.louis.utils.Generator.cpf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -39,7 +39,7 @@ class UserServiceTest extends ServiceTestAnnotations {
         final var wesley = new UserDTO(
                 "Wesley",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "wesley@mail.com",
                 "123"
         );
@@ -67,7 +67,7 @@ class UserServiceTest extends ServiceTestAnnotations {
 
         final var pedro = UserEntity.builder()
                 .name("Pedro")
-                .document(generateRandomCPF())
+                .document(cpf())
                 .type(MERCHANT)
                 .email("pedro@mail.com")
                 .password("123")

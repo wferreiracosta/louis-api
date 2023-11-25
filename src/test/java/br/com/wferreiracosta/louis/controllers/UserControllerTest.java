@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
-import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCNPJ;
-import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCPF;
+import static br.com.wferreiracosta.louis.utils.Generator.cnpj;
+import static br.com.wferreiracosta.louis.utils.Generator.cpf;
 import static java.util.List.of;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -46,7 +46,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "wesley@mail.com",
                 "123"
         );
@@ -72,7 +72,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "wesley@mail.com",
                 "123"
         );
@@ -96,7 +96,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Daniel",
                 "",
-                generateRandomCNPJ(),
+                cnpj(),
                 "daniel@mail.com",
                 "123"
         );
@@ -144,7 +144,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "",
                 "123"
         );
@@ -168,7 +168,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Pedro",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "pedro@mail.com",
                 ""
         );
@@ -192,7 +192,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Nando",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "nando@mail.com",
                 "123"
         );
@@ -224,7 +224,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Nando",
                 "Silva",
-                generateRandomCNPJ(),
+                cnpj(),
                 "nando@mail.com",
                 "123"
         );
@@ -232,7 +232,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var entity = UserEntity.builder()
                 .name("Nando")
                 .surname("Silva")
-                .document(generateRandomCNPJ())
+                .document(cnpj())
                 .email(user.email())
                 .build();
         repository.save(entity);
@@ -256,7 +256,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var anderson = UserEntity.builder()
                 .name("Karine")
                 .surname("Silva")
-                .document(generateRandomCNPJ())
+                .document(cnpj())
                 .email("karine@mail.com")
                 .type(MERCHANT)
                 .build();
@@ -264,7 +264,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var adilson = UserEntity.builder()
                 .name("Karla")
                 .surname("Silva")
-                .document(generateRandomCPF())
+                .document(cpf())
                 .email("karla@mail.com")
                 .type(COMMON)
                 .build();
@@ -288,7 +288,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Wendel",
                 "Silva",
-                generateRandomCPF(),
+                cpf(),
                 "wendel@mail.com",
                 "123"
         );
@@ -314,7 +314,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "",
                 "Silva",
-                generateRandomCPF(),
+                cpf(),
                 "tiago@mail.com",
                 "123"
         );
@@ -338,7 +338,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Denis",
                 "",
-                generateRandomCPF(),
+                cpf(),
                 "denis@mail.com",
                 "123"
         );
@@ -386,7 +386,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                generateRandomCPF(),
+                cpf(),
                 "",
                 "123"
         );
@@ -410,7 +410,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Carlos",
                 "Silva",
-                generateRandomCPF(),
+                cpf(),
                 "carlos@mail.com",
                 ""
         );
@@ -434,7 +434,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Anderson",
                 "Silva",
-                generateRandomCPF(),
+                cpf(),
                 "anderson@mail.com",
                 "123"
         );
@@ -466,7 +466,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var user = new UserDTO(
                 "Anderson",
                 "Silva",
-                generateRandomCPF(),
+                cpf(),
                 "anderson@mail.com",
                 "123"
         );
@@ -474,7 +474,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var entity = UserEntity.builder()
                 .name("Anderson")
                 .surname("Silva")
-                .document(generateRandomCPF())
+                .document(cpf())
                 .email(user.email())
                 .build();
         repository.save(entity);
@@ -498,7 +498,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var anderson = UserEntity.builder()
                 .name("Anderson")
                 .surname("Silva")
-                .document(generateRandomCNPJ())
+                .document(cnpj())
                 .email("anderson123@mail.com")
                 .type(MERCHANT)
                 .build();
@@ -506,7 +506,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         final var adilson = UserEntity.builder()
                 .name("Adilson")
                 .surname("Silva")
-                .document(generateRandomCPF())
+                .document(cpf())
                 .email("adilson123@mail.com")
                 .type(COMMON)
                 .build();
