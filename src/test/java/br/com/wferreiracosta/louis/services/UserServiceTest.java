@@ -4,7 +4,7 @@ import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.services.impl.UserServiceImpl;
-import br.com.wferreiracosta.louis.utils.ServiceTest;
+import br.com.wferreiracosta.louis.utils.ServiceAnnotations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest extends ServiceTest {
+class UserServiceTest extends ServiceAnnotations {
 
     @MockBean
     private UserRepository repository;

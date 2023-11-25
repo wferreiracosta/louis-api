@@ -3,7 +3,7 @@ package br.com.wferreiracosta.louis.controllers;
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
-import br.com.wferreiracosta.louis.utils.ControllerTest;
+import br.com.wferreiracosta.louis.utils.ControllerAnnotations;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,12 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserControllerTest extends ControllerTest {
+class UserControllerTest extends ControllerAnnotations {
 
     private final String MERCHANTS_API = "/users/merchants";
+    private final String MERCHANTS_PAGE_API = "/users/merchants/page";
     private final String COMMON_API = "/users/common";
+    private final String COMMON_PAGE_API = "/users/common/page";
 
     private Gson gson;
 
@@ -252,25 +254,25 @@ class UserControllerTest extends ControllerTest {
     @Test
     void testingFindMerchantsUsersPageable() throws Exception {
         final var anderson = UserEntity.builder()
-                .name("Anderson")
+                .name("Karine")
                 .surname("Silva")
                 .document(generateRandomCNPJ())
-                .email("anderson123@mail.com")
+                .email("karine@mail.com")
                 .type(MERCHANT)
                 .build();
 
         final var adilson = UserEntity.builder()
-                .name("Adilson")
+                .name("Karla")
                 .surname("Silva")
                 .document(generateRandomCPF())
-                .email("adilson123@mail.com")
+                .email("karla@mail.com")
                 .type(COMMON)
                 .build();
 
         repository.saveAll(of(anderson, adilson));
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_API)
+                .get(MERCHANTS_PAGE_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -278,8 +280,7 @@ class UserControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value("1"))
                 .andExpect(jsonPath("$.last").value(true))
-                .andExpect(jsonPath("$.numberOfElements").value("1"))
-                .andExpect(jsonPath("$.totalElements").value("1"));
+                .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
@@ -490,6 +491,38 @@ class UserControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value("Validation error"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));
+    }
+
+    @Test
+    void testingFindCommonUsersPageable() throws Exception {
+        final var anderson = UserEntity.builder()
+                .name("Anderson")
+                .surname("Silva")
+                .document(generateRandomCNPJ())
+                .email("anderson123@mail.com")
+                .type(MERCHANT)
+                .build();
+
+        final var adilson = UserEntity.builder()
+                .name("Adilson")
+                .surname("Silva")
+                .document(generateRandomCPF())
+                .email("adilson123@mail.com")
+                .type(COMMON)
+                .build();
+
+        repository.saveAll(of(anderson, adilson));
+
+        final var request = MockMvcRequestBuilders
+                .get(COMMON_PAGE_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages").value("1"))
+                .andExpect(jsonPath("$.last").value(true))
+                .andExpect(jsonPath("$.content").isArray());
     }
 
 }

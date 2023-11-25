@@ -12,8 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor

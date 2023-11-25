@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.repositories;
 
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
-import br.com.wferreiracosta.louis.utils.RepositoryTest;
+import br.com.wferreiracosta.louis.utils.RepositoryAnnotations;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -12,7 +12,7 @@ import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generate
 import static br.com.wferreiracosta.louis.utils.RandomDocumentGenerator.generateRandomCPF;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserRepositoryTest extends RepositoryTest {
+class UserRepositoryTest extends RepositoryAnnotations {
 
     @Autowired
     private TestEntityManager testEntityManager;

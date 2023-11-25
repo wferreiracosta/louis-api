@@ -29,11 +29,6 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public UserEntity saveCommon(@Valid @RequestBody UserDTO dto) {
-        return service.save(dto, COMMON);
-    }
-
-    @Override
     public Page<UserEntity> findMerchantPageable(
             @RequestParam(value = "page", defaultValue = "0") final Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "24") final Integer linesPerPage,
@@ -41,6 +36,21 @@ public class UserControllerImpl implements UserController {
             @RequestParam(value = "direction", defaultValue = "ASC") final String direction
     ) {
         return service.findAllPageableByType(page, linesPerPage, orderBy, direction, MERCHANT);
+    }
+
+    @Override
+    public UserEntity saveCommon(@Valid @RequestBody UserDTO dto) {
+        return service.save(dto, COMMON);
+    }
+
+    @Override
+    public Page<UserEntity> findCommonPageable(
+            @RequestParam(value = "page", defaultValue = "0") final Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "24") final Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "name") final String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") final String direction
+    ) {
+        return service.findAllPageableByType(page, linesPerPage, orderBy, direction, COMMON);
     }
 
 }
