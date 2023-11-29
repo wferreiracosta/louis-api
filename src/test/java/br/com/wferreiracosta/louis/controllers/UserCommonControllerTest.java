@@ -21,10 +21,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserControllerTest extends ControllerTestAnnotations {
+class UserCommonControllerTest extends ControllerTestAnnotations {
 
-    private final String MERCHANTS_API = "/users/merchants";
-    private final String MERCHANTS_PAGE_API = "/users/merchants/page";
     private final String COMMON_API = "/users/common";
     private final String COMMON_PAGE_API = "/users/common/page";
 
@@ -42,17 +40,17 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchant() throws Exception {
+    void testingSaveUserCommon() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Wendel",
                 "Silva",
-                cnpj(),
-                "wesley@mail.com",
+                cpf(),
+                "wendel@mail.com",
                 "123"
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -63,22 +61,22 @@ class UserControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.name").value(user.name()))
                 .andExpect(jsonPath("$.surname").value(user.surname()))
                 .andExpect(jsonPath("$.document").value(user.document()))
-                .andExpect(jsonPath("$.type").value(MERCHANT.name()))
+                .andExpect(jsonPath("$.type").value(COMMON.name()))
                 .andExpect(jsonPath("$.email").value(user.email()));
     }
 
     @Test
-    void testingSaveUserMerchantWithNameBlank() throws Exception {
+    void testingSaveUserCommonWithNameBlank() throws Exception {
         final var user = new UserDTO(
                 "",
                 "Silva",
-                cnpj(),
-                "wesley@mail.com",
+                cpf(),
+                "tiago@mail.com",
                 "123"
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -92,17 +90,17 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchantWithSurnameBlank() throws Exception {
+    void testingSaveUserCommonWithSurnameBlank() throws Exception {
         final var user = new UserDTO(
-                "Daniel",
+                "Denis",
                 "",
-                cnpj(),
-                "daniel@mail.com",
+                cpf(),
+                "denis@mail.com",
                 "123"
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -116,7 +114,7 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchantWithDocumentBlank() throws Exception {
+    void testingSaveUserCommonWithDocumentBlank() throws Exception {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
@@ -126,7 +124,7 @@ class UserControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -140,17 +138,17 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchantWithEmailBlank() throws Exception {
+    void testingSaveUserCommonWithEmailBlank() throws Exception {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
-                cnpj(),
+                cpf(),
                 "",
                 "123"
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -164,17 +162,17 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchantWithPasswordBlank() throws Exception {
+    void testingSaveUserCommonWithPasswordBlank() throws Exception {
         final var user = new UserDTO(
-                "Pedro",
+                "Carlos",
                 "Silva",
-                cnpj(),
-                "pedro@mail.com",
+                cpf(),
+                "carlos@mail.com",
                 ""
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -188,25 +186,25 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchantWithDocumentDuplicate() throws Exception {
+    void testingSaveUserCommonWithDocumentDuplicate() throws Exception {
         final var user = new UserDTO(
-                "Nando",
+                "Anderson",
                 "Silva",
-                cnpj(),
-                "nando@mail.com",
+                cpf(),
+                "anderson@mail.com",
                 "123"
         );
 
         final var entity = UserEntity.builder()
-                .name("Nando")
+                .name("Anderson")
                 .surname("Silva")
                 .document(user.document())
-                .email("nando123@mail.com")
+                .email("anderson.silva@mail.com")
                 .build();
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -220,25 +218,25 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserMerchantWithEmailDuplicate() throws Exception {
+    void testingSaveUserCommonWithEmailDuplicate() throws Exception {
         final var user = new UserDTO(
-                "Nando",
+                "Anderson",
                 "Silva",
-                cnpj(),
-                "nando@mail.com",
+                cpf(),
+                "anderson@mail.com",
                 "123"
         );
 
         final var entity = UserEntity.builder()
-                .name("Nando")
+                .name("Anderson")
                 .surname("Silva")
-                .document(cnpj())
+                .document(cpf())
                 .email(user.email())
                 .build();
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(COMMON_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -252,27 +250,27 @@ class UserControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingFindMerchantsUsersPageable() throws Exception {
+    void testingFindCommonUsersPageable() throws Exception {
         final var anderson = UserEntity.builder()
-                .name("Karine")
+                .name("Anderson")
                 .surname("Silva")
                 .document(cnpj())
-                .email("karine@mail.com")
+                .email("anderson123@mail.com")
                 .type(MERCHANT)
                 .build();
 
         final var adilson = UserEntity.builder()
-                .name("Karla")
+                .name("Adilson")
                 .surname("Silva")
                 .document(cpf())
-                .email("karla@mail.com")
+                .email("adilson123@mail.com")
                 .type(COMMON)
                 .build();
 
         repository.saveAll(of(anderson, adilson));
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_PAGE_API)
+                .get(COMMON_PAGE_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
