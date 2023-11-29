@@ -17,4 +17,6 @@ public interface UserService {
             UserType type
     );
 
+    UserEntity findByTypeAndId(Long id, UserType userType);
+
 }

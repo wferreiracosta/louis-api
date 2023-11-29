@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-public interface UserController {
+public interface UserCommonController {
 
-    @PostMapping("/merchants")
+    @PostMapping
     @ResponseStatus(CREATED)
     @Operation(
-            summary = "Insert a new merchant user",
-            description = "Insert a merchant user"
+            summary = "Insert a new common user",
+            description = "Insert a common user"
     )
     @ApiResponse(responseCode = "201", content = {
             @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
@@ -32,15 +32,15 @@ public interface UserController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    UserEntity saveMerchant(UserDTO dto);
+    UserEntity save(UserDTO dto);
 
-    @GetMapping("/merchants/page")
+    @GetMapping("/page")
     @ResponseStatus(OK)
     @Operation(
-            summary = "Find all merchant users pageable",
-            description = "Find all merchant users pageable"
+            summary = "Find all common users pageable",
+            description = "Find all common users pageable"
     )
-    @ApiResponse(responseCode = "201", content = {
+    @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
@@ -49,11 +49,28 @@ public interface UserController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    Page<UserEntity> findMerchantPageable(
+    Page<UserEntity> findPageable(
             Integer page,
             Integer linesPerPage,
             String orderBy,
             String direction
     );
+
+    @GetMapping("/{id}")
+    @ResponseStatus(OK)
+    @Operation(
+            summary = "Find all common users pageable",
+            description = "Find all common users pageable"
+    )
+    @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "404", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "500", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    UserEntity findById(Long id);
 
 }
