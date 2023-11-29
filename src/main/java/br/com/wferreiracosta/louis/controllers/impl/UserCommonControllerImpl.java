@@ -7,10 +7,7 @@ import br.com.wferreiracosta.louis.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 
@@ -34,6 +31,11 @@ public class UserCommonControllerImpl implements UserCommonController {
             @RequestParam(value = "direction", defaultValue = "ASC") final String direction
     ) {
         return service.findAllPageableByType(page, linesPerPage, orderBy, direction, COMMON);
+    }
+
+    @Override
+    public UserEntity findById(@PathVariable Long id) {
+        return service.findByTypeAndId(id, COMMON);
     }
 
 }

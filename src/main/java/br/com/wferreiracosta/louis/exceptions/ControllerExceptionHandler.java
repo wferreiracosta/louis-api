@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import static java.util.Comparator.comparing;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice
@@ -50,6 +51,17 @@ public class ControllerExceptionHandler {
                 .build();
 
         return ResponseEntity.status(BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<StandardError> objectNotFound(final ObjectNotFoundException e) {
+        final var err = StandardError.builder()
+                .status(NOT_FOUND.value())
+                .message(e.getLocalizedMessage())
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        return ResponseEntity.status(NOT_FOUND).body(err);
     }
 
 }

@@ -40,7 +40,7 @@ public interface UserCommonController {
             summary = "Find all common users pageable",
             description = "Find all common users pageable"
     )
-    @ApiResponse(responseCode = "201", content = {
+    @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
@@ -55,5 +55,22 @@ public interface UserCommonController {
             String orderBy,
             String direction
     );
+
+    @GetMapping("/{id}")
+    @ResponseStatus(OK)
+    @Operation(
+            summary = "Find all common users pageable",
+            description = "Find all common users pageable"
+    )
+    @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "404", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "500", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    UserEntity findById(Long id);
 
 }

@@ -16,6 +16,7 @@ import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static br.com.wferreiracosta.louis.utils.Generator.cnpj;
 import static br.com.wferreiracosta.louis.utils.Generator.cpf;
+import static java.lang.String.format;
 import static java.util.List.of;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -279,6 +280,47 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.totalPages").value("1"))
                 .andExpect(jsonPath("$.last").value(true))
                 .andExpect(jsonPath("$.content").isArray());
+    }
+
+    @Test
+    void testingFindCommonUserNotExists() throws Exception {
+        final var id = 100L;
+        final var message = format("No user found with the Id: %s", id);
+
+        final var request = MockMvcRequestBuilders
+                .get(COMMON_API.concat("/" + id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(message));
+    }
+
+    @Test
+    void testingFindCommonUser() throws Exception {
+        final var entity = UserEntity.builder()
+                .name("Anderson")
+                .surname("Silva")
+                .document(cpf())
+                .email("anderson.silva12348@mail.com")
+                .type(COMMON)
+                .build();
+        final var entitySaved = repository.save(entity);
+
+        final var request = MockMvcRequestBuilders
+                .get(COMMON_API.concat("/" + entitySaved.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(entitySaved.getId()))
+                .andExpect(jsonPath("$.name").value(entitySaved.getName()))
+                .andExpect(jsonPath("$.surname").value(entitySaved.getSurname()))
+                .andExpect(jsonPath("$.document").value(entitySaved.getDocument()))
+                .andExpect(jsonPath("$.type").value(entitySaved.getType().name()))
+                .andExpect(jsonPath("$.email").value(entitySaved.getEmail()));
     }
 
 }

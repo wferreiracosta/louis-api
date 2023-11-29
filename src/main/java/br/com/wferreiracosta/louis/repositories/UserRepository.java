@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Page<UserEntity> findByType(UserType type, Pageable pageable);
 
+    Optional<UserEntity> findByIdAndType(Long id, UserType type);
+
 }
