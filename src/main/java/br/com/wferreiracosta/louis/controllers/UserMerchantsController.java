@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-public interface UserController {
+public interface UserMerchantsController {
 
-    @PostMapping("/merchants")
+    @PostMapping
     @ResponseStatus(CREATED)
     @Operation(
             summary = "Insert a new merchant user",
@@ -32,9 +32,9 @@ public interface UserController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    UserEntity saveMerchant(UserDTO dto);
+    UserEntity save(UserDTO dto);
 
-    @GetMapping("/merchants/page")
+    @GetMapping("/page")
     @ResponseStatus(OK)
     @Operation(
             summary = "Find all merchant users pageable",
@@ -49,11 +49,28 @@ public interface UserController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    Page<UserEntity> findMerchantPageable(
+    Page<UserEntity> findPageable(
             Integer page,
             Integer linesPerPage,
             String orderBy,
             String direction
     );
+
+    @GetMapping("/{id}")
+    @ResponseStatus(OK)
+    @Operation(
+            summary = "Find merchant by id",
+            description = "Find merchant by id"
+    )
+    @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "404", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "500", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    UserEntity findById(Long id);
 
 }
