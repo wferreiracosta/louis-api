@@ -21,4 +21,9 @@ public class WalletControllerImpl implements WalletController {
         return service.findById(id);
     }
 
+    @Override
+    public WalletEntity findByUserId(@Valid @PathVariable final Long id) {
+        return service.findByUserId(id);
+    }
+
 }

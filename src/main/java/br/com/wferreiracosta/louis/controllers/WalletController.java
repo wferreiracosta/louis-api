@@ -30,4 +30,21 @@ public interface WalletController {
     })
     WalletEntity findById(Long id);
 
+    @GetMapping("/users/{id}")
+    @ResponseStatus(OK)
+    @Operation(
+            summary = "Find wallet by user id",
+            description = "Find wallet by user id"
+    )
+    @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = WalletEntity.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "404", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "500", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    WalletEntity findByUserId(Long id);
+
 }

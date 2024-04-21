@@ -60,4 +60,11 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public UserEntity findById(Long id) {
+        return repository.findById(id).orElseThrow(
+                () -> new ObjectNotFoundException(format("No user found with the Id: %s", id))
+        );
+    }
+
 }

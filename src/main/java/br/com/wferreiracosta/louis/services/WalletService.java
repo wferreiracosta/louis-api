@@ -6,4 +6,6 @@ public interface WalletService {
 
     WalletEntity findById(Long id);
 
+    WalletEntity findByUserId(Long id);
+
 }
