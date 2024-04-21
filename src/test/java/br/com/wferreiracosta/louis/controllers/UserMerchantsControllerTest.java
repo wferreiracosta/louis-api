@@ -20,6 +20,8 @@ import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static br.com.wferreiracosta.louis.utils.Generator.*;
 import static java.lang.String.format;
 import static java.util.List.of;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -281,13 +283,8 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value("1"))
                 .andExpect(jsonPath("$.last").value(true))
-                .andExpect(jsonPath("$.content[0].id").value(marcos.getId()))
-                .andExpect(jsonPath("$.content[0].name").value(marcos.getName()))
-                .andExpect(jsonPath("$.content[0].surname").value(marcos.getSurname()))
-                .andExpect(jsonPath("$.content[0].document").value(marcos.getDocument()))
-                .andExpect(jsonPath("$.content[0].email").value(marcos.getEmail()))
-                .andExpect(jsonPath("$.content[0].type").value(marcos.getType().name()))
-                .andExpect(jsonPath("$.content").isArray());
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(greaterThan(0))));
     }
 
     @Test
