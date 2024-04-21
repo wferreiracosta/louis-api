@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity save(final UserDTO dto, final UserType type) {
+        //TODO: Implementar criação de wallet
         final var entity = new UserEntity(dto);
         entity.setType(type);
         return repository.save(entity);

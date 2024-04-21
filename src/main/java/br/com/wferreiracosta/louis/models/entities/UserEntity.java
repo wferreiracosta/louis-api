@@ -3,6 +3,7 @@ package br.com.wferreiracosta.louis.models.entities;
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.enums.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,5 +53,9 @@ public class UserEntity {
     @Schema(description = "User type", example = "COMMON")
     @Enumerated(EnumType.STRING)
     private UserType type;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private WalletEntity wallet;
 
 }
