@@ -2,6 +2,7 @@ package br.com.wferreiracosta.louis.controllers;
 
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
@@ -35,7 +39,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     private UserRepository repository;
 
     @Test
-    void testingSaveUserMerchant() throws Exception {
+    void testingSaveUserMerchantWithSucess() throws Exception {
         final var user = new UserDTO(
                 "Wesley",
                 "Silva",
@@ -57,7 +61,11 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.surname").value(user.surname()))
                 .andExpect(jsonPath("$.document").value(user.document()))
                 .andExpect(jsonPath("$.type").value(MERCHANT.name()))
-                .andExpect(jsonPath("$.email").value(user.email()));
+                .andExpect(jsonPath("$.email").value(user.email()))
+                .andExpect(jsonPath("$.wallet.id").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.amount").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.createdDate").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.updateDate").isNotEmpty());
     }
 
     @Test
@@ -87,7 +95,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserMerchantWithSurnameBlank() throws Exception {
         final var user = new UserDTO(
-                "Daniel",
+                "Pedro",
                 "",
                 cnpj(),
                 email(),
@@ -111,7 +119,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserMerchantWithDocumentBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Pedro",
                 "Silva",
                 "",
                 email(),
@@ -135,7 +143,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserMerchantWithEmailBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Pedro",
                 "Silva",
                 cnpj(),
                 "",
@@ -183,7 +191,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserMerchantWithDocumentDuplicate() throws Exception {
         final var user = new UserDTO(
-                "Nando",
+                "Marcos",
                 "Silva",
                 cnpj(),
                 email(),
@@ -191,7 +199,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var entity = UserEntity.builder()
-                .name("Nando")
+                .name("Pedro")
                 .surname("Silva")
                 .document(user.document())
                 .email(email())
@@ -215,7 +223,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserMerchantWithEmailDuplicate() throws Exception {
         final var user = new UserDTO(
-                "Nando",
+                "Marcos",
                 "Silva",
                 cnpj(),
                 email(),
@@ -223,7 +231,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var entity = UserEntity.builder()
-                .name("Nando")
+                .name("Pedro")
                 .surname("Silva")
                 .document(cnpj())
                 .email(user.email())
@@ -246,23 +254,23 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingFindMerchantsUsersPageable() throws Exception {
-        final var anderson = UserEntity.builder()
-                .name("Karine")
+        final var marcos = UserEntity.builder()
+                .name("Marcos")
                 .surname("Silva")
                 .document(cnpj())
                 .email(email())
                 .type(MERCHANT)
                 .build();
 
-        final var adilson = UserEntity.builder()
-                .name("Karla")
+        final var pedro = UserEntity.builder()
+                .name("Pedro")
                 .surname("Silva")
                 .document(cpf())
                 .email(email())
                 .type(COMMON)
                 .build();
 
-        repository.saveAll(of(anderson, adilson));
+        repository.saveAll(of(marcos, pedro));
 
         final var request = MockMvcRequestBuilders
                 .get(MERCHANTS_PAGE_API)
@@ -273,19 +281,34 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value("1"))
                 .andExpect(jsonPath("$.last").value(true))
+                .andExpect(jsonPath("$.content[0].id").value(marcos.getId()))
+                .andExpect(jsonPath("$.content[0].name").value(marcos.getName()))
+                .andExpect(jsonPath("$.content[0].surname").value(marcos.getSurname()))
+                .andExpect(jsonPath("$.content[0].document").value(marcos.getDocument()))
+                .andExpect(jsonPath("$.content[0].email").value(marcos.getEmail()))
+                .andExpect(jsonPath("$.content[0].type").value(marcos.getType().name()))
                 .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
-    void testingFindMerchantsUserWithSucess() throws Exception {
+    void testingFindMerchantsUserByIdWithSucess() throws Exception {
+        final var wallet = WalletEntity.builder()
+                .amount(new BigDecimal("1"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
         final var entity = UserEntity.builder()
-                .name("Anderson")
+                .name("Pedro")
                 .surname("Silva")
                 .document(cpf())
                 .email(email())
                 .type(MERCHANT)
+                .wallet(wallet)
                 .build();
+        wallet.setUser(entity);
         final var entitySaved = repository.save(entity);
+        final var walletSaved = entitySaved.getWallet();
 
         final var request = MockMvcRequestBuilders
                 .get(MERCHANTS_API.concat("/" + entitySaved.getId()))
@@ -299,7 +322,11 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.surname").value(entitySaved.getSurname()))
                 .andExpect(jsonPath("$.document").value(entitySaved.getDocument()))
                 .andExpect(jsonPath("$.type").value(entitySaved.getType().name()))
-                .andExpect(jsonPath("$.email").value(entitySaved.getEmail()));
+                .andExpect(jsonPath("$.email").value(entitySaved.getEmail()))
+                .andExpect(jsonPath("$.wallet.id").value(walletSaved.getId()))
+                .andExpect(jsonPath("$.wallet.amount").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.createdDate").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.updateDate").isNotEmpty());
     }
 
     @Test

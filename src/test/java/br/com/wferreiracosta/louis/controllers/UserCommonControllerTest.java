@@ -2,6 +2,7 @@ package br.com.wferreiracosta.louis.controllers;
 
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -12,10 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
-import static br.com.wferreiracosta.louis.utils.Generator.cnpj;
-import static br.com.wferreiracosta.louis.utils.Generator.cpf;
+import static br.com.wferreiracosta.louis.utils.Generator.*;
 import static java.lang.String.format;
 import static java.util.List.of;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -41,12 +44,12 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingSaveUserCommon() throws Exception {
+    void testingSaveUserCommonWithSucess() throws Exception {
         final var user = new UserDTO(
-                "Wendel",
+                "Pedro",
                 "Silva",
                 cpf(),
-                "wendel@mail.com",
+                email(),
                 "123"
         );
 
@@ -63,7 +66,11 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.surname").value(user.surname()))
                 .andExpect(jsonPath("$.document").value(user.document()))
                 .andExpect(jsonPath("$.type").value(COMMON.name()))
-                .andExpect(jsonPath("$.email").value(user.email()));
+                .andExpect(jsonPath("$.email").value(user.email()))
+                .andExpect(jsonPath("$.wallet.id").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.amount").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.createdDate").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.updateDate").isNotEmpty());
     }
 
     @Test
@@ -72,7 +79,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 "",
                 "Silva",
                 cpf(),
-                "tiago@mail.com",
+                email(),
                 "123"
         );
 
@@ -93,10 +100,10 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserCommonWithSurnameBlank() throws Exception {
         final var user = new UserDTO(
-                "Denis",
+                "Pedro",
                 "",
                 cpf(),
-                "denis@mail.com",
+                email(),
                 "123"
         );
 
@@ -117,10 +124,10 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserCommonWithDocumentBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Pedro",
                 "Silva",
                 "",
-                "wesley@mail.com",
+                email(),
                 "123"
         );
 
@@ -141,7 +148,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserCommonWithEmailBlank() throws Exception {
         final var user = new UserDTO(
-                "Wesley",
+                "Pedro",
                 "Silva",
                 cpf(),
                 "",
@@ -165,10 +172,10 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserCommonWithPasswordBlank() throws Exception {
         final var user = new UserDTO(
-                "Carlos",
+                "Pedro",
                 "Silva",
                 cpf(),
-                "carlos@mail.com",
+                email(),
                 ""
         );
 
@@ -189,18 +196,18 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserCommonWithDocumentDuplicate() throws Exception {
         final var user = new UserDTO(
-                "Anderson",
+                "Pedro",
                 "Silva",
                 cpf(),
-                "anderson@mail.com",
+                email(),
                 "123"
         );
 
         final var entity = UserEntity.builder()
-                .name("Anderson")
+                .name("Marcos")
                 .surname("Silva")
                 .document(user.document())
-                .email("anderson.silva@mail.com")
+                .email(email())
                 .build();
         repository.save(entity);
 
@@ -221,15 +228,15 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     @Test
     void testingSaveUserCommonWithEmailDuplicate() throws Exception {
         final var user = new UserDTO(
-                "Anderson",
+                "Pedro",
                 "Silva",
                 cpf(),
-                "anderson@mail.com",
+                email(),
                 "123"
         );
 
         final var entity = UserEntity.builder()
-                .name("Anderson")
+                .name("Marcos")
                 .surname("Silva")
                 .document(cpf())
                 .email(user.email())
@@ -252,23 +259,23 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingFindCommonUsersPageable() throws Exception {
-        final var anderson = UserEntity.builder()
-                .name("Anderson")
+        final var marcus = UserEntity.builder()
+                .name("Marcus")
                 .surname("Silva")
                 .document(cnpj())
-                .email("anderson123@mail.com")
+                .email(email())
                 .type(MERCHANT)
                 .build();
 
-        final var adilson = UserEntity.builder()
-                .name("Adilson")
+        final var pedro = UserEntity.builder()
+                .name("Pedro")
                 .surname("Silva")
                 .document(cpf())
-                .email("adilson123@mail.com")
+                .email(email())
                 .type(COMMON)
                 .build();
 
-        repository.saveAll(of(anderson, adilson));
+        repository.saveAll(of(marcus, pedro));
 
         final var request = MockMvcRequestBuilders
                 .get(COMMON_PAGE_API)
@@ -279,6 +286,12 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value("1"))
                 .andExpect(jsonPath("$.last").value(true))
+                .andExpect(jsonPath("$.content[0].id").value(pedro.getId()))
+                .andExpect(jsonPath("$.content[0].name").value(pedro.getName()))
+                .andExpect(jsonPath("$.content[0].surname").value(pedro.getSurname()))
+                .andExpect(jsonPath("$.content[0].document").value(pedro.getDocument()))
+                .andExpect(jsonPath("$.content[0].email").value(pedro.getEmail()))
+                .andExpect(jsonPath("$.content[0].type").value(pedro.getType().name()))
                 .andExpect(jsonPath("$.content").isArray());
     }
 
@@ -298,15 +311,25 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void testingFindCommonUser() throws Exception {
+    void testingFindCommonUserById() throws Exception {
+        final var wallet = WalletEntity.builder()
+                .amount(new BigDecimal("1"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
         final var entity = UserEntity.builder()
-                .name("Anderson")
+                .name("Pedro")
                 .surname("Silva")
                 .document(cpf())
-                .email("anderson.silva12348@mail.com")
+                .email(email())
                 .type(COMMON)
+                .wallet(wallet)
                 .build();
+        wallet.setUser(entity);
+
         final var entitySaved = repository.save(entity);
+        final var walletSaved = entitySaved.getWallet();
 
         final var request = MockMvcRequestBuilders
                 .get(COMMON_API.concat("/" + entitySaved.getId()))
@@ -320,7 +343,11 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.surname").value(entitySaved.getSurname()))
                 .andExpect(jsonPath("$.document").value(entitySaved.getDocument()))
                 .andExpect(jsonPath("$.type").value(entitySaved.getType().name()))
-                .andExpect(jsonPath("$.email").value(entitySaved.getEmail()));
+                .andExpect(jsonPath("$.email").value(entitySaved.getEmail()))
+                .andExpect(jsonPath("$.wallet.id").value(walletSaved.getId()))
+                .andExpect(jsonPath("$.wallet.amount").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.createdDate").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.updateDate").isNotEmpty());
     }
 
 }
