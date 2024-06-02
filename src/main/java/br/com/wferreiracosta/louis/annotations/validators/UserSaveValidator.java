@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.annotations.validators;
 
 import br.com.wferreiracosta.louis.annotations.UserValidator;
+import br.com.wferreiracosta.louis.exceptions.FieldMessage;
 import br.com.wferreiracosta.louis.models.dtos.UserDTO;
-import br.com.wferreiracosta.louis.models.exceptions.FieldMessage;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

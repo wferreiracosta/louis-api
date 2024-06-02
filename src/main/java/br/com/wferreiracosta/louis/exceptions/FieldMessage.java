@@ -1,4 +1,4 @@
-package br.com.wferreiracosta.louis.models.exceptions;
+package br.com.wferreiracosta.louis.exceptions;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
