@@ -64,4 +64,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(NOT_FOUND).body(err);
     }
 
+    @ExceptionHandler(ConfigurationException.class)
+    public ResponseEntity<StandardError> configuration(final ConfigurationException e) {
+        final var err = StandardError.builder()
+                .status(BAD_REQUEST.value())
+                .message(e.getLocalizedMessage())
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        return ResponseEntity.status(BAD_REQUEST).body(err);
+    }
+
 }

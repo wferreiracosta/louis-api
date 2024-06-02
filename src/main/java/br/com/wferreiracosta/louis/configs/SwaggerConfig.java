@@ -18,17 +18,17 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI info() {
         final var contact = new Contact()
-                .name(property.getContactName())
-                .url(property.getContactSite());
+                .name(property.contactName())
+                .url(property.contactSite());
 
         final var license = new License()
-                .name(property.getLicense())
-                .url(property.getLicenseUrl());
+                .name(property.license())
+                .url(property.licenseUrl());
 
         final var info = new Info()
-                .title(property.getName())
-                .version(property.getVersion())
-                .description(property.getDescription())
+                .title(property.name())
+                .version(property.version())
+                .description(property.description())
                 .contact(contact)
                 .license(license);
 

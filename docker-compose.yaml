@@ -19,6 +19,21 @@ services:
     networks:
       - global-default
 
+  localstack:
+    container_name: louis-api-localstack
+    image: localstack/localstack
+    networks:
+      - global-default
+    ports:
+      - '4566:4566'
+    volumes:
+      - ./aws/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
+    environment:
+      - SERVICES=s3,sqs,secretsmanager
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_ACCESS_KEY_ID=access_key_id
+      - AWS_SECRET_ACCESS_KEY=secret_access_key
+
 networks:
   global-default:
     external: true
