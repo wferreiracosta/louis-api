@@ -1,0 +1,24 @@
+version: '3'
+
+volumes:
+  data:
+
+services:
+
+  postgres:
+    container_name: louis-api-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: louisdb
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql
+    networks:
+      - global-default
+
+networks:
+  global-default:
+    external: true
