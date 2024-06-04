@@ -1,10 +1,10 @@
 package br.com.wferreiracosta.louis.services.impl;
 
 import br.com.wferreiracosta.louis.exceptions.ObjectNotFoundException;
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.enums.UserType;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +27,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public UserEntity save(final UserDTO dto, final UserType type) {
+    public UserEntity save(final UserParameter parameter, final UserType type) {
         final var wallet = WalletEntity.builder()
                 .amount(new BigDecimal("0"))
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        final var user = new UserEntity(dto);
+        final var user = new UserEntity(parameter);
         user.setWallet(wallet);
         wallet.setUser(user);
 

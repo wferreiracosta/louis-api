@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers;
 
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -42,7 +42,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithSucess() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Wesley",
                 "Silva",
                 cnpj(),
@@ -72,7 +72,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithNameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "",
                 "Silva",
                 cnpj(),
@@ -96,7 +96,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithSurnameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "",
                 cnpj(),
@@ -120,7 +120,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithDocumentBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 "",
@@ -144,7 +144,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithEmailBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cnpj(),
@@ -168,7 +168,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithPasswordBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cnpj(),
@@ -192,7 +192,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithDocumentDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Marcos",
                 "Silva",
                 cnpj(),
@@ -224,7 +224,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithEmailDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Marcos",
                 "Silva",
                 cnpj(),

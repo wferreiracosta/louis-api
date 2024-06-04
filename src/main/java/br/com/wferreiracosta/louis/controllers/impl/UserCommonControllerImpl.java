@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers.impl;
 
 import br.com.wferreiracosta.louis.controllers.UserCommonController;
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ public class UserCommonControllerImpl implements UserCommonController {
     private final UserService service;
 
     @Override
-    public UserEntity save(@Valid @RequestBody UserDTO dto) {
-        return service.save(dto, COMMON);
+    public UserEntity save(@Valid @RequestBody UserParameter parameter) {
+        return service.save(parameter, COMMON);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers;
 
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -47,7 +47,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithSucess() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -77,7 +77,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithNameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "",
                 "Silva",
                 cpf(),
@@ -101,7 +101,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithSurnameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "",
                 cpf(),
@@ -125,7 +125,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithDocumentBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 "",
@@ -149,7 +149,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithEmailBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -173,7 +173,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithPasswordBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -197,7 +197,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithDocumentDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -229,7 +229,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithEmailDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),

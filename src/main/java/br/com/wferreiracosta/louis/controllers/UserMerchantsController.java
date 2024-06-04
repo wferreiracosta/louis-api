@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers;
 
 import br.com.wferreiracosta.louis.exceptions.ValidationError;
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +32,7 @@ public interface UserMerchantsController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    UserEntity save(UserDTO dto);
+    UserEntity save(UserParameter parameter);
 
     @GetMapping("/page")
     @ResponseStatus(OK)
