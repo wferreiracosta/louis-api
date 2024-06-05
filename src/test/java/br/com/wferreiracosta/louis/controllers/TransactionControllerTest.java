@@ -152,7 +152,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
     }
 
     @Test
-    void transferWithErrorBecauseUserPayerHasNoBalance() throws Exception {
+    void transferWithErrorBecauseUserPayerDoesNotHaveABalanceToTransfer() throws Exception {
         final var walletPayer = WalletEntity.builder()
                 .amount(new BigDecimal(3))
                 .createdDate(now())
