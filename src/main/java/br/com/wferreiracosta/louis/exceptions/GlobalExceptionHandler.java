@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
                 .map(x -> new FieldMessage(x.getField(), x.getDefaultMessage()))
                 .sorted(comparing(FieldMessage::fieldName))
                 .toList();
-        final var error = map(BAD_REQUEST.value(), "Validation error", currentTimeMillis(), errors);
+        final var error = map(BAD_REQUEST.value(), "Errors", currentTimeMillis(), errors);
         return ResponseEntity.status(BAD_REQUEST).body(error);
     }
 

@@ -89,7 +89,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("name"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your name is mandatory"));
     }
@@ -113,7 +113,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("surname"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your surname is mandatory"));
     }
@@ -137,7 +137,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your document is mandatory"));
     }
@@ -161,7 +161,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your email is mandatory"));
     }
@@ -185,7 +185,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("password"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your password is mandatory"));
     }
@@ -217,7 +217,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this document"));
     }
@@ -249,7 +249,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));
     }
