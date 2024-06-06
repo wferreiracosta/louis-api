@@ -12,8 +12,7 @@ import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Comparator.comparing;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @ControllerAdvice
@@ -45,6 +44,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<StandardError> configuration(final ConfigurationException e) {
         final var err = map(BAD_REQUEST.value(), e.getLocalizedMessage(), currentTimeMillis());
         return ResponseEntity.status(BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<StandardError> transaction(final TransactionException e) {
+        final var err = map(FORBIDDEN.value(), e.getLocalizedMessage(), currentTimeMillis());
+        return ResponseEntity.status(FORBIDDEN).body(err);
     }
 
     private StandardError map(final Integer value, final String message, final Long currentTimeMillis) {
