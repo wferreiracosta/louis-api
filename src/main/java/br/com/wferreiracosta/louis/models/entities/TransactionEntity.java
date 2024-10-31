@@ -1,0 +1,39 @@
+package br.com.wferreiracosta.louis.models.entities;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "transactions")
+@Entity(name = "transactions")
+@EqualsAndHashCode(of = "id")
+public class TransactionEntity {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Schema(description = "Transaction identifier", example = "1")
+    private Long id;
+
+    private BigDecimal amount;
+
+    @ManyToOne
+    @JoinColumn(name = "transferring_id")
+    private WalletEntity transferring;
+
+    @ManyToOne
+    @JoinColumn(name = "receiving_id")
+    private WalletEntity receiving;
+
+    private LocalDateTime timestamp;
+
+}

@@ -7,7 +7,10 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -35,6 +38,12 @@ public class WalletEntity {
     @JsonBackReference
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "transferring")
+    private List<TransactionEntity> transferring = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiving")
+    private List<TransactionEntity> receiving = new ArrayList<>();
 
 }
 
