@@ -1,5 +1,6 @@
 package br.com.wferreiracosta.louis.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,10 +28,12 @@ public class TransactionEntity {
     private BigDecimal amount;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "transferring_id")
     private WalletEntity transferring;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "receiving_id")
     private WalletEntity receiving;
 

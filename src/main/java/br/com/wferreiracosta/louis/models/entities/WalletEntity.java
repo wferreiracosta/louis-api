@@ -1,6 +1,7 @@
 package br.com.wferreiracosta.louis.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,9 +40,11 @@ public class WalletEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "transferring")
     private List<TransactionEntity> transferring = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "receiving")
     private List<TransactionEntity> receiving = new ArrayList<>();
 
