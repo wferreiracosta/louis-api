@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers;
 
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
-    private final String MERCHANTS_API = "/users/merchants";
-    private final String MERCHANTS_PAGE_API = "/users/merchants/page";
+    private final String urlMerchants = "/users/merchants";
+    private final String urlMerchantsPage = "/users/merchants/page";
 
     @Autowired
     private Gson gson;
@@ -42,7 +42,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithSucess() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Wesley",
                 "Silva",
                 cnpj(),
@@ -51,7 +51,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -72,7 +72,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserMerchantWithNameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "",
                 "Silva",
                 cnpj(),
@@ -81,7 +81,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -89,14 +89,14 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("name"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your name is mandatory"));
     }
 
     @Test
     void testingSaveUserMerchantWithSurnameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "",
                 cnpj(),
@@ -105,7 +105,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -113,14 +113,14 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("surname"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your surname is mandatory"));
     }
 
     @Test
     void testingSaveUserMerchantWithDocumentBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 "",
@@ -129,7 +129,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -137,14 +137,14 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your document is mandatory"));
     }
 
     @Test
     void testingSaveUserMerchantWithEmailBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cnpj(),
@@ -153,7 +153,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -161,14 +161,14 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your email is mandatory"));
     }
 
     @Test
     void testingSaveUserMerchantWithPasswordBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cnpj(),
@@ -177,7 +177,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -185,14 +185,14 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("password"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your password is mandatory"));
     }
 
     @Test
     void testingSaveUserMerchantWithDocumentDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Marcos",
                 "Silva",
                 cnpj(),
@@ -209,7 +209,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -217,14 +217,14 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this document"));
     }
 
     @Test
     void testingSaveUserMerchantWithEmailDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Marcos",
                 "Silva",
                 cnpj(),
@@ -241,7 +241,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -249,7 +249,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));
     }
@@ -275,7 +275,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         repository.saveAll(of(marcos, pedro));
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_PAGE_API)
+                .get(urlMerchantsPage)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -308,7 +308,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         final var walletSaved = entitySaved.getWallet();
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_API.concat("/" + entitySaved.getId()))
+                .get(urlMerchants.concat("/" + entitySaved.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -332,7 +332,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         final var message = format("No user found with the Id: %s", id);
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_API.concat("/" + id))
+                .get(urlMerchants.concat("/" + id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 

@@ -29,4 +29,9 @@ public class WalletServiceImpl implements WalletService {
         return userService.findById(id).getWallet();
     }
 
+    @Override
+    public WalletEntity update(WalletEntity entity) {
+        return repository.save(entity);
+    }
+
 }

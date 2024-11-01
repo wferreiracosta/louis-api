@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.services;
 
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.services.impl.UserServiceImpl;
 import br.com.wferreiracosta.louis.utils.ServiceTestAnnotations;
@@ -36,7 +36,7 @@ class UserServiceTest extends ServiceTestAnnotations {
 
     @Test
     void testingSave() {
-        final var wesley = new UserDTO(
+        final var wesley = new UserParameter(
                 "Wesley",
                 "Silva",
                 cnpj(),

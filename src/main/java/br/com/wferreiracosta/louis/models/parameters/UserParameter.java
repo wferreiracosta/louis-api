@@ -1,11 +1,11 @@
-package br.com.wferreiracosta.louis.models.dtos;
+package br.com.wferreiracosta.louis.models.parameters;
 
 import br.com.wferreiracosta.louis.annotations.UserValidator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 @UserValidator
-public record UserDTO(
+public record UserParameter(
 
         @Schema(description = "Username", example = "Pedro")
         @NotBlank(message = "Filling in your name is mandatory")

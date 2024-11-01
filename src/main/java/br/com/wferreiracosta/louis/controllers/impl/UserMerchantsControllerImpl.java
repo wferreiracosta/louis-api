@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers.impl;
 
 import br.com.wferreiracosta.louis.controllers.UserMerchantsController;
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class UserMerchantsControllerImpl implements UserMerchantsController {
     private final UserService service;
 
     @Override
-    public UserEntity save(@Valid @RequestBody final UserDTO dto) {
-        return service.save(dto, MERCHANT);
+    public UserEntity save(@Valid @RequestBody final UserParameter parameter) {
+        return service.save(parameter, MERCHANT);
     }
 
     @Override

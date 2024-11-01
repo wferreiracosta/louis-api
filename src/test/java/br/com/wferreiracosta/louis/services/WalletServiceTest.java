@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.utils.Generator.cpf;
+import static br.com.wferreiracosta.louis.utils.Generator.email;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -152,6 +153,39 @@ class WalletServiceTest extends ServiceTestAnnotations {
         } catch (final ObjectNotFoundException ex) {
             assertEquals(message, ex.getLocalizedMessage());
         }
+    }
+
+    @Test
+    void testingUpdateWallet() {
+        final var wallet = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
+        final var user = UserEntity.builder()
+                .name("Anderson")
+                .surname("Silva")
+                .document(cpf())
+                .email(email())
+                .type(COMMON)
+                .wallet(wallet)
+                .build();
+
+        wallet.setUser(user);
+
+        final var userSaved = userRepository.save(user);
+        final var walletSaved = userSaved.getWallet();
+
+        final var subtractValue = new BigDecimal("500");
+        walletSaved.setAmount(walletSaved.getAmount().subtract(subtractValue));
+
+        final var walletUpdate = service.update(walletSaved);
+
+        assertEquals(walletSaved.getId(), walletUpdate.getId());
+        assertEquals(subtractValue, walletUpdate.getAmount());
+        assertEquals(walletSaved.getCreatedDate(), walletUpdate.getCreatedDate());
+        assertEquals(walletSaved.getUpdateDate(), walletUpdate.getUpdateDate());
     }
 
 }

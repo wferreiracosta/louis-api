@@ -1,8 +1,8 @@
 package br.com.wferreiracosta.louis.controllers;
 
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -29,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserCommonControllerTest extends ControllerTestAnnotations {
 
-    private final String COMMON_API = "/users/common";
-    private final String COMMON_PAGE_API = "/users/common/page";
+    private final String urlCommon = "/users/common";
+    private final String urlCommonPage = "/users/common/page";
 
     private Gson gson;
 
@@ -47,7 +47,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithSucess() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -56,7 +56,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -77,7 +77,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
 
     @Test
     void testingSaveUserCommonWithNameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "",
                 "Silva",
                 cpf(),
@@ -86,7 +86,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -94,14 +94,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("name"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your name is mandatory"));
     }
 
     @Test
     void testingSaveUserCommonWithSurnameBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "",
                 cpf(),
@@ -110,7 +110,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -118,14 +118,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("surname"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your surname is mandatory"));
     }
 
     @Test
     void testingSaveUserCommonWithDocumentBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 "",
@@ -134,7 +134,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -142,14 +142,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your document is mandatory"));
     }
 
     @Test
     void testingSaveUserCommonWithEmailBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -158,7 +158,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -166,14 +166,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your email is mandatory"));
     }
 
     @Test
     void testingSaveUserCommonWithPasswordBlank() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -182,7 +182,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -190,14 +190,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("password"))
                 .andExpect(jsonPath("$.errors[0].message").value("Filling in your password is mandatory"));
     }
 
     @Test
     void testingSaveUserCommonWithDocumentDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -214,7 +214,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -222,14 +222,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this document"));
     }
 
     @Test
     void testingSaveUserCommonWithEmailDuplicate() throws Exception {
-        final var user = new UserDTO(
+        final var user = new UserParameter(
                 "Pedro",
                 "Silva",
                 cpf(),
@@ -246,7 +246,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -254,7 +254,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.message").value("Validation error"))
+                .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));
     }
@@ -280,7 +280,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         repository.saveAll(of(marcus, pedro));
 
         final var request = MockMvcRequestBuilders
-                .get(COMMON_PAGE_API)
+                .get(urlCommonPage)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -298,7 +298,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         final var message = format("No user found with the Id: %s", id);
 
         final var request = MockMvcRequestBuilders
-                .get(COMMON_API.concat("/" + id))
+                .get(urlCommon.concat("/" + id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -329,7 +329,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         final var walletSaved = entitySaved.getWallet();
 
         final var request = MockMvcRequestBuilders
-                .get(COMMON_API.concat("/" + entitySaved.getId()))
+                .get(urlCommon.concat("/" + entitySaved.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 

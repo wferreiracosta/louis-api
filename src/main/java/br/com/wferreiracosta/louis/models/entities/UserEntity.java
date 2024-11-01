@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.models.entities;
 
-import br.com.wferreiracosta.louis.models.dtos.UserDTO;
 import br.com.wferreiracosta.louis.models.enums.UserType;
+import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,12 +20,12 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id")
 public class UserEntity {
 
-    public UserEntity(final UserDTO dto) {
-        this.name = dto.name();
-        this.surname = dto.surname();
-        this.document = dto.document();
-        this.email = dto.email();
-        this.password = dto.password();
+    public UserEntity(final UserParameter parameter) {
+        this.name = parameter.name();
+        this.surname = parameter.surname();
+        this.document = parameter.document();
+        this.email = parameter.email();
+        this.password = parameter.password();
     }
 
     @Id
