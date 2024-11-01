@@ -25,6 +25,7 @@ public class TransactionEntity {
     @Schema(description = "Transaction identifier", example = "1")
     private Long id;
 
+    @Column(precision = 12, scale = 2)
     private BigDecimal amount;
 
     @ManyToOne

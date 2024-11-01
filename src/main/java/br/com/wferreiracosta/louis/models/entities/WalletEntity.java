@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -29,6 +28,7 @@ public class WalletEntity {
     @Schema(description = "User identifier", example = "1")
     private Long id;
 
+    @Column(precision = 12, scale = 2)
     private BigDecimal amount;
 
     private LocalDateTime createdDate;

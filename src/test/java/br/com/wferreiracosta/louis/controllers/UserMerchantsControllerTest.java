@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserMerchantsControllerTest extends ControllerTestAnnotations {
 
-    private final String MERCHANTS_API = "/users/merchants";
-    private final String MERCHANTS_PAGE_API = "/users/merchants/page";
+    private final String urlMerchants = "/users/merchants";
+    private final String urlMerchantsPage = "/users/merchants/page";
 
     @Autowired
     private Gson gson;
@@ -51,7 +51,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -81,7 +81,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -105,7 +105,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -129,7 +129,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -153,7 +153,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -177,7 +177,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -209,7 +209,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -241,7 +241,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(MERCHANTS_API)
+                .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -275,7 +275,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         repository.saveAll(of(marcos, pedro));
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_PAGE_API)
+                .get(urlMerchantsPage)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -308,7 +308,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         final var walletSaved = entitySaved.getWallet();
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_API.concat("/" + entitySaved.getId()))
+                .get(urlMerchants.concat("/" + entitySaved.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -332,7 +332,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
         final var message = format("No user found with the Id: %s", id);
 
         final var request = MockMvcRequestBuilders
-                .get(MERCHANTS_API.concat("/" + id))
+                .get(urlMerchants.concat("/" + id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 

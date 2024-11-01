@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static br.com.wferreiracosta.louis.utils.Generator.cpf;

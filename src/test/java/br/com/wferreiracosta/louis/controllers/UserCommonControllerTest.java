@@ -29,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserCommonControllerTest extends ControllerTestAnnotations {
 
-    private final String COMMON_API = "/users/common";
-    private final String COMMON_PAGE_API = "/users/common/page";
+    private final String urlCommon = "/users/common";
+    private final String urlCommonPage = "/users/common/page";
 
     private Gson gson;
 
@@ -56,7 +56,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -86,7 +86,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -110,7 +110,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -134,7 +134,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -158,7 +158,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -182,7 +182,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         );
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -214,7 +214,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -246,7 +246,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         repository.save(entity);
 
         final var request = MockMvcRequestBuilders
-                .post(COMMON_API)
+                .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(user));
@@ -280,7 +280,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         repository.saveAll(of(marcus, pedro));
 
         final var request = MockMvcRequestBuilders
-                .get(COMMON_PAGE_API)
+                .get(urlCommonPage)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -298,7 +298,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         final var message = format("No user found with the Id: %s", id);
 
         final var request = MockMvcRequestBuilders
-                .get(COMMON_API.concat("/" + id))
+                .get(urlCommon.concat("/" + id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -329,7 +329,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
         final var walletSaved = entitySaved.getWallet();
 
         final var request = MockMvcRequestBuilders
-                .get(COMMON_API.concat("/" + entitySaved.getId()))
+                .get(urlCommon.concat("/" + entitySaved.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 

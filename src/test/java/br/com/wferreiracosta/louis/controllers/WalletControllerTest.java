@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class WalletControllerTest extends ControllerTestAnnotations {
 
-    private final String WALLETS_API = "/wallets";
+    private final String urlWallet = "/wallets";
 
     private Gson gson;
 
@@ -55,7 +55,7 @@ class WalletControllerTest extends ControllerTestAnnotations {
         final var walletSaved = userSaved.getWallet();
 
         final var request = MockMvcRequestBuilders
-                .get(WALLETS_API.concat("/" + walletSaved.getId()))
+                .get(urlWallet.concat("/" + walletSaved.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -89,7 +89,7 @@ class WalletControllerTest extends ControllerTestAnnotations {
         final var walletSaved = userSaved.getWallet();
 
         final var request = MockMvcRequestBuilders
-                .get(WALLETS_API.concat("/users/" + userSaved.getId()))
+                .get(urlWallet.concat("/users/" + userSaved.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -107,7 +107,7 @@ class WalletControllerTest extends ControllerTestAnnotations {
         final var message = format("No user found with the Id: %s", id);
 
         final var request = MockMvcRequestBuilders
-                .get(WALLETS_API.concat("/users/" + id))
+                .get(urlWallet.concat("/users/" + id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
