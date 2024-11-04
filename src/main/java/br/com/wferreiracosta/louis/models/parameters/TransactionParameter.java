@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Transaction
 public record TransactionParameter(
 
-        BigDecimal value,
+        BigDecimal amount,
         Long payer,
         Long payee
 

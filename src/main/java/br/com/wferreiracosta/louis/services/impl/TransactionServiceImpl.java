@@ -24,11 +24,11 @@ public class TransactionServiceImpl implements TransactionService {
         final var payerWallet = walletService.findByUserId(parameter.payer());
         final var payeeWallet = walletService.findByUserId(parameter.payee());
 
-        payerWallet.setAmount(payerWallet.getAmount().subtract(parameter.value()));
-        payeeWallet.setAmount(payeeWallet.getAmount().add(parameter.value()));
+        payerWallet.setAmount(payerWallet.getAmount().subtract(parameter.amount()));
+        payeeWallet.setAmount(payeeWallet.getAmount().add(parameter.amount()));
 
         final var transaction = TransactionEntity.builder()
-                .amount(parameter.value())
+                .amount(parameter.amount())
                 .transferring(payerWallet)
                 .receiving(payeeWallet)
                 .timestamp(now())

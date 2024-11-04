@@ -38,7 +38,7 @@ public class TransactionValidator implements ConstraintValidator<Transaction, Tr
 
         if (userPayer.isPresent()) {
             final var payer = userPayer.get();
-            if (payer.getWallet().getAmount().compareTo(parameter.value()) < 0) {
+            if (payer.getWallet().getAmount().compareTo(parameter.amount()) < 0) {
                 list.add(new FieldMessage(payerField, "Payer does not have a balance in their wallet"));
             }
 

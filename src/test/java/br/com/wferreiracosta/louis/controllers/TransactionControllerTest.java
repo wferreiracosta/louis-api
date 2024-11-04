@@ -244,7 +244,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
 
         this.mvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.value").value(parameter.value()))
+                .andExpect(jsonPath("$.amount").value(parameter.amount()))
                 .andExpect(jsonPath("$.payer.name").value(payerSaved.getName()))
                 .andExpect(jsonPath("$.payer.surname").value(payerSaved.getSurname()))
                 .andExpect(jsonPath("$.payer.email").value(payerSaved.getEmail()))
@@ -253,12 +253,12 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.payee.email").value(payeeSaved.getEmail()));
 
         final var payerResult = repository.findById(payerSaved.getId()).get();
-        final var payerAmountExpected = walletPayer.getAmount().subtract(parameter.value());
+        final var payerAmountExpected = walletPayer.getAmount().subtract(parameter.amount());
         assertEquals(0, payerAmountExpected.compareTo(payerResult.getWallet().getAmount()));
 
 
         final var payeeResult = repository.findById(payeeSaved.getId()).get();
-        final var payeeAmountExpected = walletPayee.getAmount().add(parameter.value());
+        final var payeeAmountExpected = walletPayee.getAmount().add(parameter.amount());
         assertEquals(0, payeeAmountExpected.compareTo(payeeResult.getWallet().getAmount()));
     }
 
