@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public record TransactionDTO(
 
-        BigDecimal value,
+        BigDecimal amount,
         LocalDateTime date,
         TransactionUserDTO payer,
         TransactionUserDTO payee

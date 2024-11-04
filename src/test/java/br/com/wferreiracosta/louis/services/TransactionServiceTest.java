@@ -87,7 +87,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
 
         final var dto = service.transfer(parameter);
 
-        Assertions.assertEquals(parameter.value(), dto.value());
+        Assertions.assertEquals(parameter.amount(), dto.amount());
 
         final var transactionPayer = dto.payer();
         Assertions.assertEquals(payerSaved.getName(), transactionPayer.name());
