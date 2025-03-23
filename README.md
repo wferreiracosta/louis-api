@@ -32,11 +32,12 @@ This project is an API for a simple banking correspondent, handling the registra
     docker-compose up --build
     ```
 
-3. **Access the API**:
+3. **Create a Secrets Manager in Localstack container**:
+    ```bash
+    awslocal --region=us-east-1 secretsmanager create-secret --name secret-rds-postgres-louis-use1-lcl --secret-string '{"username":"postgres","password":"password","engine":"postgresql","host":"localhost","port":5432,"dbInstanceIdentifier":"","driverClassName":"org.postgresql.Driver","database":"louisdb"}'
+    ```
+
+4. **Access the API**:
    ```
    http://localhost:8080/swagger-ui/index.html
    ```
-
-## UML Diagram
-
-![Database](docs/diagram-database.png)
