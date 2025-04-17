@@ -1,0 +1,2 @@
+#!/bin/bash
+awslocal --region=us-east-1 secretsmanager create-secret --name secret-rds-postgres-louis-use1-lcl --secret-string '{"username":"postgres","password":"password","engine":"postgresql","host":"localhost","port":5432,"dbInstanceIdentifier":"","driverClassName":"org.postgresql.Driver","database":"louisdb"}'
