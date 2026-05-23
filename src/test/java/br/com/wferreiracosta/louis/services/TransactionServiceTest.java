@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static br.com.wferreiracosta.louis.utils.Generator.cpf;
 import static br.com.wferreiracosta.louis.utils.Generator.email;
@@ -56,7 +57,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
         final var payer = UserEntity.builder()
                 .name("Pedro")
                 .document(cpf())
-                .type(br.com.wferreiracosta.louis.models.enums.UserType.COMMON)
+                .type(COMMON)
                 .email(email())
                 .password("123")
                 .wallet(walletPayer)
@@ -157,7 +158,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
         final var payer = UserEntity.builder()
                 .name("Pedro")
                 .document(cpf())
-                .type(br.com.wferreiracosta.louis.models.enums.UserType.COMMON)
+                .type(COMMON)
                 .email(email())
                 .password("123")
                 .wallet(walletPayer)
