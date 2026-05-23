@@ -3,7 +3,7 @@ package br.com.wferreiracosta.louis.services;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.parameters.TransactionParameter;
-import br.com.wferreiracosta.louis.repositories.TransactionRespository;
+import br.com.wferreiracosta.louis.repositories.TransactionRepository;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.repositories.WalletRepository;
 import br.com.wferreiracosta.louis.services.impl.TransactionServiceImpl;
@@ -29,7 +29,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
     private TransactionService service;
 
     @Autowired
-    private TransactionRespository respository;
+    private TransactionRepository repository;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,7 +41,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
     public void setUp() {
         final var userService = new UserServiceImpl(userRepository);
         final var walletService = new WalletServiceImpl(walletRepository, userService);
-        service = new TransactionServiceImpl(walletService, respository, userRepository);
+        service = new TransactionServiceImpl(walletService, repository, userRepository);
     }
 
     @Test

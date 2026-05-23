@@ -5,7 +5,7 @@ import br.com.wferreiracosta.louis.models.dtos.TransactionDTO;
 import br.com.wferreiracosta.louis.models.dtos.TransactionUserDTO;
 import br.com.wferreiracosta.louis.models.entities.TransactionEntity;
 import br.com.wferreiracosta.louis.models.parameters.TransactionParameter;
-import br.com.wferreiracosta.louis.repositories.TransactionRespository;
+import br.com.wferreiracosta.louis.repositories.TransactionRepository;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.services.TransactionService;
 import br.com.wferreiracosta.louis.services.WalletService;
@@ -22,7 +22,7 @@ import static java.time.LocalDateTime.now;
 public class TransactionServiceImpl implements TransactionService {
 
     private final WalletService walletService;
-    private final TransactionRespository respository;
+    private final TransactionRepository repository;
     private final UserRepository userRepository;
 
     @Override
@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .receiving(payeeWallet)
                 .timestamp(now())
                 .build();
-        final var transactionSaved = respository.save(transaction);
+        final var transactionSaved = repository.save(transaction);
 
         payerWallet.getTransferring().add(transactionSaved);
         final var payerWalletUpdate = walletService.update(payerWallet);
