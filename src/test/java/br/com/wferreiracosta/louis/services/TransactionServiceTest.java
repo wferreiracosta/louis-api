@@ -41,7 +41,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
     public void setUp() {
         final var userService = new UserServiceImpl(userRepository);
         final var walletService = new WalletServiceImpl(walletRepository, userService);
-        service = new TransactionServiceImpl(walletService, respository);
+        service = new TransactionServiceImpl(walletService, respository, userRepository);
     }
 
     @Test
@@ -56,7 +56,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
         final var payer = UserEntity.builder()
                 .name("Pedro")
                 .document(cpf())
-                .type(MERCHANT)
+                .type(br.com.wferreiracosta.louis.models.enums.UserType.COMMON)
                 .email(email())
                 .password("123")
                 .wallet(walletPayer)
@@ -100,5 +100,94 @@ class TransactionServiceTest extends ServiceTestAnnotations {
         Assertions.assertEquals(payeeSaved.getEmail(), transactionPayee.email());
     }
 
+    @Test
+    void transferWithErrorBecausePayerIsMerchant() {
+        final var walletPayer = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payer = UserEntity.builder()
+                .name("Pedro")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(walletPayer)
+                .build();
+        walletPayer.setUser(payer);
+        final var payerSaved = userRepository.save(payer);
+
+        final var payeeWallet = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payee = UserEntity.builder()
+                .name("Carlos")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(payeeWallet)
+                .build();
+        payeeWallet.setUser(payee);
+        final var payeeSaved = userRepository.save(payee);
+
+        final var parameter = new TransactionParameter(new BigDecimal(500), payerSaved.getId(), payeeSaved.getId());
+
+        Assertions.assertThrows(br.com.wferreiracosta.louis.exceptions.BusinessValidationException.class, () -> {
+            service.transfer(parameter);
+        });
+    }
+
+    @Test
+    void transferWithErrorBecauseInsufficientBalance() {
+        final var walletPayer = WalletEntity.builder()
+                .amount(new BigDecimal("100"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payer = UserEntity.builder()
+                .name("Pedro")
+                .document(cpf())
+                .type(br.com.wferreiracosta.louis.models.enums.UserType.COMMON)
+                .email(email())
+                .password("123")
+                .wallet(walletPayer)
+                .build();
+        walletPayer.setUser(payer);
+        final var payerSaved = userRepository.save(payer);
+
+        final var payeeWallet = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payee = UserEntity.builder()
+                .name("Carlos")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(payeeWallet)
+                .build();
+        payeeWallet.setUser(payee);
+        final var payeeSaved = userRepository.save(payee);
+
+        final var parameter = new TransactionParameter(new BigDecimal(500), payerSaved.getId(), payeeSaved.getId());
+
+        Assertions.assertThrows(br.com.wferreiracosta.louis.exceptions.BusinessValidationException.class, () -> {
+            service.transfer(parameter);
+        });
+    }
 
 }

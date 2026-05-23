@@ -29,6 +29,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(BusinessValidationException.class)
+    public ResponseEntity<ValidationError> businessValidation(final BusinessValidationException e) {
+        final var errors = List.of(new FieldMessage(e.getFieldName(), e.getMessage()));
+        final var error = map(BAD_REQUEST.value(), "Errors", currentTimeMillis(), errors);
+        return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<StandardError> httpMessageNotReadable(final HttpMessageNotReadableException e) {
         final var err = map(BAD_REQUEST.value(), e.getLocalizedMessage(), currentTimeMillis());
