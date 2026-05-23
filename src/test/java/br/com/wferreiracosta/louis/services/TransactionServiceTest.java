@@ -3,7 +3,7 @@ package br.com.wferreiracosta.louis.services;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.parameters.TransactionParameter;
-import br.com.wferreiracosta.louis.repositories.TransactionRespository;
+import br.com.wferreiracosta.louis.repositories.TransactionRepository;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.repositories.WalletRepository;
 import br.com.wferreiracosta.louis.services.impl.TransactionServiceImpl;
@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static br.com.wferreiracosta.louis.models.enums.UserType.COMMON;
 import static br.com.wferreiracosta.louis.models.enums.UserType.MERCHANT;
 import static br.com.wferreiracosta.louis.utils.Generator.cpf;
 import static br.com.wferreiracosta.louis.utils.Generator.email;
@@ -29,7 +30,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
     private TransactionService service;
 
     @Autowired
-    private TransactionRespository respository;
+    private TransactionRepository repository;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,7 +42,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
     public void setUp() {
         final var userService = new UserServiceImpl(userRepository);
         final var walletService = new WalletServiceImpl(walletRepository, userService);
-        service = new TransactionServiceImpl(walletService, respository);
+        service = new TransactionServiceImpl(walletService, repository, userRepository);
     }
 
     @Test
@@ -56,7 +57,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
         final var payer = UserEntity.builder()
                 .name("Pedro")
                 .document(cpf())
-                .type(MERCHANT)
+                .type(COMMON)
                 .email(email())
                 .password("123")
                 .wallet(walletPayer)
@@ -100,5 +101,94 @@ class TransactionServiceTest extends ServiceTestAnnotations {
         Assertions.assertEquals(payeeSaved.getEmail(), transactionPayee.email());
     }
 
+    @Test
+    void transferWithErrorBecausePayerIsMerchant() {
+        final var walletPayer = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payer = UserEntity.builder()
+                .name("Pedro")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(walletPayer)
+                .build();
+        walletPayer.setUser(payer);
+        final var payerSaved = userRepository.save(payer);
+
+        final var payeeWallet = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payee = UserEntity.builder()
+                .name("Carlos")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(payeeWallet)
+                .build();
+        payeeWallet.setUser(payee);
+        final var payeeSaved = userRepository.save(payee);
+
+        final var parameter = new TransactionParameter(new BigDecimal(500), payerSaved.getId(), payeeSaved.getId());
+
+        Assertions.assertThrows(br.com.wferreiracosta.louis.exceptions.BusinessValidationException.class, () -> {
+            service.transfer(parameter);
+        });
+    }
+
+    @Test
+    void transferWithErrorBecauseInsufficientBalance() {
+        final var walletPayer = WalletEntity.builder()
+                .amount(new BigDecimal("100"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payer = UserEntity.builder()
+                .name("Pedro")
+                .document(cpf())
+                .type(COMMON)
+                .email(email())
+                .password("123")
+                .wallet(walletPayer)
+                .build();
+        walletPayer.setUser(payer);
+        final var payerSaved = userRepository.save(payer);
+
+        final var payeeWallet = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payee = UserEntity.builder()
+                .name("Carlos")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(payeeWallet)
+                .build();
+        payeeWallet.setUser(payee);
+        final var payeeSaved = userRepository.save(payee);
+
+        final var parameter = new TransactionParameter(new BigDecimal(500), payerSaved.getId(), payeeSaved.getId());
+
+        Assertions.assertThrows(br.com.wferreiracosta.louis.exceptions.BusinessValidationException.class, () -> {
+            service.transfer(parameter);
+        });
+    }
 
 }

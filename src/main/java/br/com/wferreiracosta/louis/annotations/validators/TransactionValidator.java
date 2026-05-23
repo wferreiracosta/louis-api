@@ -20,40 +20,7 @@ public class TransactionValidator implements ConstraintValidator<Transaction, Tr
 
     @Override
     public boolean isValid(final TransactionParameter parameter, final ConstraintValidatorContext context) {
-        final var payerField = "payer";
-        final var payeeField = "payee";
-
-        final var list = new ArrayList<FieldMessage>();
-
-        final var userPayer = userRepository.findById(parameter.payer());
-        final var userPayee = userRepository.findById(parameter.payee());
-
-        if (userPayer.isEmpty()) {
-            list.add(new FieldMessage(payerField, format("User payer with id %s not exists", parameter.payer())));
-        }
-
-        if (userPayee.isEmpty()) {
-            list.add(new FieldMessage(payeeField, format("User payee with id %s not exists", parameter.payee())));
-        }
-
-        if (userPayer.isPresent()) {
-            final var payer = userPayer.get();
-            if (payer.getWallet().getAmount().compareTo(parameter.amount()) < 0) {
-                list.add(new FieldMessage(payerField, "Payer does not have a balance in their wallet"));
-            }
-
-            if (payer.getType().equals(MERCHANT)) {
-                list.add(new FieldMessage(payerField, "Merchants users only receive transfers, they do not send money to anyone"));
-            }
-        }
-
-        for (FieldMessage e : list) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(e.message()).addPropertyNode(e.fieldName())
-                    .addConstraintViolation();
-        }
-
-        return list.isEmpty();
+        return true;
     }
 
 }
