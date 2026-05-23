@@ -1,12 +1,14 @@
 package br.com.wferreiracosta.louis.configs;
 
 import br.com.wferreiracosta.louis.configs.properties.SecretsManagerProperties;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import javax.sql.DataSource;
 
 import static java.lang.String.format;
 
@@ -19,14 +21,14 @@ public class DataSourceConfig {
     private final SecretsManagerProperties properties;
 
     @Bean
-    public DriverManagerDataSource dataSource() {
+    public DataSource dataSource() {
         final var url = format("jdbc:%s://%s:%s/%s",
                 properties.engine(), properties.host(),
                 properties.port(), properties.database());
 
-        final var dataSource = new DriverManagerDataSource();
+        final var dataSource = new HikariDataSource();
         dataSource.setDriverClassName(properties.driverClassName());
-        dataSource.setUrl(url);
+        dataSource.setJdbcUrl(url);
         dataSource.setUsername(properties.username());
         dataSource.setPassword(properties.password());
 
