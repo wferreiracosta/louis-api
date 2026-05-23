@@ -23,8 +23,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public TransactionDTO transfer(final TransactionParameter parameter) {
-        final var payerWallet = walletService.findByUserId(parameter.payer());
-        final var payeeWallet = walletService.findByUserId(parameter.payee());
+        final var payerWallet = walletService.findByUserIdWithLock(parameter.payer());
+        final var payeeWallet = walletService.findByUserIdWithLock(parameter.payee());
 
         payerWallet.setAmount(payerWallet.getAmount().subtract(parameter.amount()));
         payeeWallet.setAmount(payeeWallet.getAmount().add(parameter.amount()));

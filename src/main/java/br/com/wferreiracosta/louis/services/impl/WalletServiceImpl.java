@@ -7,6 +7,7 @@ import br.com.wferreiracosta.louis.services.UserService;
 import br.com.wferreiracosta.louis.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.lang.String.format;
 
@@ -27,6 +28,15 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletEntity findByUserId(final Long id) {
         return userService.findById(id).getWallet();
+    }
+
+    @Override
+    @Transactional
+    public WalletEntity findByUserIdWithLock(final Long id) {
+        userService.findById(id);
+        return repository.findByUserIdWithLock(id).orElseThrow(
+                () -> new ObjectNotFoundException(format("No wallet found with the User Id: %s", id))
+        );
     }
 
     @Override

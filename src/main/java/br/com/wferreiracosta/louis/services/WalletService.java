@@ -8,6 +8,8 @@ public interface WalletService {
 
     WalletEntity findByUserId(Long id);
 
+    WalletEntity findByUserIdWithLock(Long id);
+
     WalletEntity update(WalletEntity entity);
 
 }
