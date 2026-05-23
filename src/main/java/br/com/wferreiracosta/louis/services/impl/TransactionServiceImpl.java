@@ -9,6 +9,7 @@ import br.com.wferreiracosta.louis.services.TransactionService;
 import br.com.wferreiracosta.louis.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.time.LocalDateTime.now;
 
@@ -20,6 +21,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRespository respository;
 
     @Override
+    @Transactional
     public TransactionDTO transfer(final TransactionParameter parameter) {
         final var payerWallet = walletService.findByUserId(parameter.payer());
         final var payeeWallet = walletService.findByUserId(parameter.payee());
