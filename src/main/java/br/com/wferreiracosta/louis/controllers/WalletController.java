@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.controllers;
 
 import br.com.wferreiracosta.louis.exceptions.ValidationError;
-import br.com.wferreiracosta.louis.models.entities.WalletEntity;
+import br.com.wferreiracosta.louis.models.dtos.WalletResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +20,7 @@ public interface WalletController {
             description = "Find wallet by id"
     )
     @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = WalletEntity.class), mediaType = "application/json")
+            @Content(schema = @Schema(implementation = WalletResponseDTO.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
@@ -28,7 +28,7 @@ public interface WalletController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    WalletEntity findById(Long id);
+    WalletResponseDTO findById(Long id);
 
     @GetMapping("/users/{id}")
     @ResponseStatus(OK)
@@ -37,7 +37,7 @@ public interface WalletController {
             description = "Find wallet by user id"
     )
     @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = WalletEntity.class), mediaType = "application/json")
+            @Content(schema = @Schema(implementation = WalletResponseDTO.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
@@ -45,6 +45,6 @@ public interface WalletController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    WalletEntity findByUserId(Long id);
+    WalletResponseDTO findByUserId(Long id);
 
 }

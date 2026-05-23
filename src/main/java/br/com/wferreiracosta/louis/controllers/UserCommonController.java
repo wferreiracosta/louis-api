@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.controllers;
 
 import br.com.wferreiracosta.louis.exceptions.ValidationError;
-import br.com.wferreiracosta.louis.models.entities.UserEntity;
+import br.com.wferreiracosta.louis.models.dtos.UserResponseDTO;
 import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +24,7 @@ public interface UserCommonController {
             description = "Insert a common user"
     )
     @ApiResponse(responseCode = "201", content = {
-            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+            @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
@@ -32,7 +32,7 @@ public interface UserCommonController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    UserEntity save(UserParameter parameter);
+    UserResponseDTO save(UserParameter parameter);
 
     @GetMapping("/page")
     @ResponseStatus(OK)
@@ -41,7 +41,7 @@ public interface UserCommonController {
             description = "Find all common users pageable"
     )
     @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+            @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
@@ -49,7 +49,7 @@ public interface UserCommonController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    Page<UserEntity> findPageable(
+    Page<UserResponseDTO> findPageable(
             Integer page,
             Integer linesPerPage,
             String orderBy,
@@ -63,7 +63,7 @@ public interface UserCommonController {
             description = "Find all common users pageable"
     )
     @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = UserEntity.class), mediaType = "application/json")
+            @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json")
     })
     @ApiResponse(responseCode = "404", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
@@ -71,6 +71,6 @@ public interface UserCommonController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
-    UserEntity findById(Long id);
+    UserResponseDTO findById(Long id);
 
 }

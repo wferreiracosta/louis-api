@@ -1,7 +1,7 @@
 package br.com.wferreiracosta.louis.controllers.impl;
 
 import br.com.wferreiracosta.louis.controllers.WalletController;
-import br.com.wferreiracosta.louis.models.entities.WalletEntity;
+import br.com.wferreiracosta.louis.models.dtos.WalletResponseDTO;
 import br.com.wferreiracosta.louis.services.WalletService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ public class WalletControllerImpl implements WalletController {
     private final WalletService service;
 
     @Override
-    public WalletEntity findById(@Valid @PathVariable final Long id) {
-        return service.findById(id);
+    public WalletResponseDTO findById(@Valid @PathVariable final Long id) {
+        return WalletResponseDTO.fromEntity(service.findById(id));
     }
 
     @Override
-    public WalletEntity findByUserId(@Valid @PathVariable final Long id) {
-        return service.findByUserId(id);
+    public WalletResponseDTO findByUserId(@Valid @PathVariable final Long id) {
+        return WalletResponseDTO.fromEntity(service.findByUserId(id));
     }
 
 }
