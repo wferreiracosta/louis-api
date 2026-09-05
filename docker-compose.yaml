@@ -19,15 +19,15 @@ services:
     networks:
       - global-default
 
-  localstack:
-    container_name: louis-api-localstack
-    image: localstack/localstack
+  ministack:
+    container_name: louis-api-ministack
+    image: ministackorg/ministack
     networks:
       - global-default
     ports:
-      - '4566:4566'
+      - '9090:4566'
     volumes:
-      - ./aws/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
+      - ./aws/init-aws.sh:/etc/ministack/init/ready.d/init-aws.sh
     environment:
       - SERVICES=s3,sqs,secretsmanager
       - DOCKER_HOST=unix:///var/run/docker.sock
