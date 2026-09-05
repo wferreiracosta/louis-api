@@ -40,10 +40,12 @@ public class WalletEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Builder.Default
     @JsonManagedReference
     @OneToMany(mappedBy = "transferring")
     private List<TransactionEntity> transferring = new ArrayList<>();
 
+    @Builder.Default
     @JsonManagedReference
     @OneToMany(mappedBy = "receiving")
     private List<TransactionEntity> receiving = new ArrayList<>();
