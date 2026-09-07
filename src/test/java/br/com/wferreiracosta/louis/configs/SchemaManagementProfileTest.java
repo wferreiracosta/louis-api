@@ -28,16 +28,19 @@ class SchemaManagementProfileTest {
     class ProfilePropertyResolutionTests {
 
         @Test
-        @DisplayName("Common configuration (no active profile) must NOT define spring.jpa.hibernate.ddl-auto")
-        void commonConfigurationDoesNotDefineDdlAuto() {
+        @DisplayName("When no profile is explicitly set, spring.profiles.default=lcl activates the lcl profile (ddl-auto=update)")
+        void defaultProfileActivatesLclWhenNoProfileIsSet() {
             try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                     .web(WebApplicationType.NONE)
                     .profiles()
                     .run()) {
                 ConfigurableEnvironment env = context.getEnvironment();
+                // With spring.profiles.default=@activatedProperties@ filtered by Maven (defaulting to lcl),
+                // the lcl profile is activated when no profile is explicitly set,
+                // causing application-lcl.properties (ddl-auto=update) to be loaded.
                 assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto"))
-                        .as("Common configuration should not define ddl-auto")
-                        .isNull();
+                        .as("Default Maven profile (lcl) should set ddl-auto=update via application-lcl.properties")
+                        .isEqualTo("update");
             }
         }
 
