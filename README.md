@@ -32,9 +32,21 @@ This project is an API for a simple banking correspondent, handling the registra
     docker-compose up --build
     ```
 
-3. **Create a Secrets Manager in Localstack container**:
+3. **Initialize AWS resources in the Ministack container**:
+
+    Enter the running Ministack container:
     ```bash
-    awslocal --region=us-east-1 secretsmanager create-secret --name secret-rds-postgres-louis-use1-lcl --secret-string '{"username":"postgres","password":"password","engine":"postgresql","host":"localhost","port":5432,"dbInstanceIdentifier":"","driverClassName":"org.postgresql.Driver","database":"louisdb"}'
+    docker exec -it louis-api-ministack sh
+    ```
+
+    Then run the initialization script:
+    ```bash
+    sh /etc/ministack/init/ready.d/init-aws.sh
+    ```
+
+    Or run it directly in a single command:
+    ```bash
+    docker exec -it louis-api-ministack sh /etc/ministack/init/ready.d/init-aws.sh
     ```
 
 4. **Access the API**:
