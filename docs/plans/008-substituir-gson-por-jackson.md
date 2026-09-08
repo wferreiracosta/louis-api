@@ -1,9 +1,12 @@
-﻿# 008 — Substituir Gson pelo Jackson (`ObjectMapper`)
+# 008 — Substituir Gson pelo Jackson (`ObjectMapper`)
 
 **Sprint:** 🟠 2 — Limpeza Técnica  
 **Categoria:** Refatoração / Dependências  
 **Impacto:** 🟢 Baixo  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `build: replace Gson with Jackson ObjectMapper in SecretsManagerConfig`  
+**Branch:** `build/8`
 
 ---
 

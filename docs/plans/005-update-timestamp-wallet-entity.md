@@ -1,9 +1,12 @@
-﻿# 005 — Adicionar `@UpdateTimestamp` em `WalletEntity.updateDate`
+# 005 — Adicionar `@UpdateTimestamp` em `WalletEntity.updateDate`
 
 **Sprint:** 🔴 1 — Bugs Críticos  
 **Categoria:** Concorrência / Auditoria  
 **Impacto:** 🟡 Médio  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `fix: add @UpdateTimestamp and @CreationTimestamp to WalletEntity`  
+**Branch:** `fix/5`
 
 ---
 

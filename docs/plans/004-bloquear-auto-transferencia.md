@@ -1,9 +1,12 @@
-﻿# 004 — Bloquear Auto-Transferência (Self-Transfer)
+# 004 — Bloquear Auto-Transferência (Self-Transfer)
 
 **Sprint:** 🔴 1 — Bugs Críticos  
 **Categoria:** Regra de Negócio  
 **Impacto:** 🟡 Médio  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `feat: block self-transfer validation in transaction service`  
+**Branch:** `feat/4`
 
 ---
 

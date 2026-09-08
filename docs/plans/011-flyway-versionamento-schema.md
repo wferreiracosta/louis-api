@@ -1,9 +1,12 @@
-﻿# 011 — Adicionar Flyway para Versionamento de Schema
+# 011 — Adicionar Flyway para Versionamento de Schema
 
 **Sprint:** 🟡 3 — Preparação para Produção  
 **Categoria:** DevOps / Banco de Dados  
 **Impacto:** 🟡 Médio  
 **Esforço:** ⏱️ Médio
+
+**Commit:** `build: add Flyway for versioned schema migration`  
+**Branch:** `build/11`
 
 ---
 

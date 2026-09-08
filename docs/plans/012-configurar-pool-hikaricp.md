@@ -1,9 +1,12 @@
-﻿# 012 — Configurar Pool de Conexões HikariCP
+# 012 — Configurar Pool de Conexões HikariCP
 
 **Sprint:** 🟡 3 — Preparação para Produção  
 **Categoria:** Performance / Infraestrutura  
 **Impacto:** 🟡 Médio  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `perf: configure HikariCP connection pool settings`  
+**Branch:** `perf/12`
 
 ---
 
