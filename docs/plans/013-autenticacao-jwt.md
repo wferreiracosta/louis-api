@@ -1,9 +1,12 @@
-﻿# 013 — Autenticação e Autorização com JWT
+# 013 — Autenticação e Autorização com JWT
 
 **Sprint:** 🔵 4 — Segurança Completa  
 **Categoria:** Segurança  
 **Impacto:** 🔴 Crítico  
 **Esforço:** ⏱️ Alto
+
+**Commit:** `feat: add JWT authentication and authorization`  
+**Branch:** `feat/13`
 
 ---
 

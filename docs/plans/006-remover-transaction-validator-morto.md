@@ -1,9 +1,12 @@
-﻿# 006 — Remover `TransactionValidator` (Código Morto)
+# 006 — Remover `TransactionValidator` (Código Morto)
 
 **Sprint:** 🟠 2 — Limpeza Técnica  
 **Categoria:** Qualidade de Código  
 **Impacto:** 🟡 Médio  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `refactor: remove dead TransactionValidator code`  
+**Branch:** `refactor/6`
 
 ---
 

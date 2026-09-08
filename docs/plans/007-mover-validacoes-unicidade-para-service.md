@@ -1,9 +1,12 @@
-﻿# 007 — Mover Validações de Unicidade para `UserServiceImpl`
+# 007 — Mover Validações de Unicidade para `UserServiceImpl`
 
 **Sprint:** 🟠 2 — Limpeza Técnica  
 **Categoria:** Arquitetura / Qualidade de Código  
 **Impacto:** 🟡 Médio  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `refactor: move uniqueness validations from validator to UserServiceImpl`  
+**Branch:** `refactor/7`
 
 ---
 

@@ -1,9 +1,12 @@
-﻿# 003 — Ordenar Locks Pessimistas para Prevenir Deadlock
+# 003 — Ordenar Locks Pessimistas para Prevenir Deadlock
 
 **Sprint:** 🔴 1 — Bugs Críticos  
 **Categoria:** Concorrência  
 **Impacto:** 🔴 Crítico  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `fix: order pessimistic locks to prevent deadlock`  
+**Branch:** `fix/3`
 
 ---
 

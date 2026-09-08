@@ -1,9 +1,12 @@
-﻿# 010 — Hash de Senhas com BCrypt
+# 010 — Hash de Senhas com BCrypt
 
 **Sprint:** 🟡 3 — Preparação para Produção  
 **Categoria:** Segurança  
 **Impacto:** 🔴 Crítico  
 **Esforço:** ⏱️ Médio
+
+**Commit:** `feat: encode user passwords with BCrypt on registration`  
+**Branch:** `feat/10`
 
 ---
 

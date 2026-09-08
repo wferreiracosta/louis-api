@@ -1,9 +1,12 @@
-﻿# 009 — Corrigir URL de Clone no `README.md`
+# 009 — Corrigir URL de Clone no `README.md`
 
 **Sprint:** 🟠 2 — Limpeza Técnica  
 **Categoria:** Documentação  
 **Impacto:** 🟢 Baixo  
 **Esforço:** ⏱️ Baixo
+
+**Commit:** `docs: fix clone URL in README`  
+**Branch:** `docs/9`
 
 ---
 
