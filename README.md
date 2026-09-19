@@ -20,6 +20,15 @@ This project is an API for a simple banking correspondent, handling the registra
 
 🔍 *PostgreSQL*: The strategic choice of Postgresql ensures data integrity, enabling reliable management of sensitive information.
 
+📋 *OpenSpec with Antigravity & Codex*: The project utilizes the **OpenSpec** framework for spec-driven development, proposal planning, and requirements traceability, integrated into AI-assisted workflows using **Antigravity** and **Codex**.
+
+## Spec-Driven Development (OpenSpec)
+
+This project adopts the [OpenSpec](openspec/) framework for requirements management, technical design proposals, and change tracking in collaboration with **Antigravity** and **Codex**:
+
+- **Specifications**: Core requirements and capabilities are version-controlled in [`openspec/specs/`](openspec/specs/).
+- **Change Proposals**: Planning artifacts, delta specifications, and task breakdowns are managed under [`openspec/changes/`](openspec/changes/).
+
 ## Getting Started
 
 1. **Clone the Repository**:
