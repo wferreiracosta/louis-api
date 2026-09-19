@@ -190,5 +190,110 @@ class TransactionServiceTest extends ServiceTestAnnotations {
             service.transfer(parameter);
         });
     }
+    @Test
+    void transferMoneySuccessfullyWhenPayerIdIsLessThanPayeeId() {
+        // Payer salvo primeiro → ID menor; payee salvo depois → ID maior
+        final var walletPayer = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payer = UserEntity.builder()
+                .name("Alice")
+                .document(cpf())
+                .type(COMMON)
+                .email(email())
+                .password("123")
+                .wallet(walletPayer)
+                .build();
+        walletPayer.setUser(payer);
+        final var payerSaved = userRepository.save(payer);
+
+        final var walletPayee = WalletEntity.builder()
+                .amount(new BigDecimal("500"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payee = UserEntity.builder()
+                .name("Bob")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(walletPayee)
+                .build();
+        walletPayee.setUser(payee);
+        final var payeeSaved = userRepository.save(payee);
+
+        // payer.id < payee.id: payer foi salvo primeiro em contexto H2 fresh
+        final var parameter = new TransactionParameter(new BigDecimal("200"), payerSaved.getId(), payeeSaved.getId());
+
+        final var dto = service.transfer(parameter);
+
+        Assertions.assertEquals(parameter.amount(), dto.amount());
+
+        final var payerWalletAfter = walletRepository.findById(payerSaved.getWallet().getId()).get();
+        final var payeeWalletAfter = walletRepository.findById(payeeSaved.getWallet().getId()).get();
+
+        Assertions.assertEquals(new BigDecimal("800"), payerWalletAfter.getAmount());
+        Assertions.assertEquals(new BigDecimal("700"), payeeWalletAfter.getAmount());
+    }
+
+    @Test
+    void transferMoneySuccessfullyWhenPayerIdIsGreaterThanPayeeId() {
+        // Payee salvo primeiro → ID menor; payer salvo depois → ID maior
+        final var walletPayee = WalletEntity.builder()
+                .amount(new BigDecimal("500"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payee = UserEntity.builder()
+                .name("Diana")
+                .document(cpf())
+                .type(MERCHANT)
+                .email(email())
+                .password("123")
+                .wallet(walletPayee)
+                .build();
+        walletPayee.setUser(payee);
+        final var payeeSaved = userRepository.save(payee);
+
+        final var walletPayer = WalletEntity.builder()
+                .amount(new BigDecimal("1000"))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .transferring(new ArrayList<>())
+                .receiving(new ArrayList<>())
+                .build();
+        final var payer = UserEntity.builder()
+                .name("Charlie")
+                .document(cpf())
+                .type(COMMON)
+                .email(email())
+                .password("123")
+                .wallet(walletPayer)
+                .build();
+        walletPayer.setUser(payer);
+        final var payerSaved = userRepository.save(payer);
+
+        // payer.id > payee.id: payee foi salvo primeiro em contexto H2 fresh
+        final var parameter = new TransactionParameter(new BigDecimal("300"), payerSaved.getId(), payeeSaved.getId());
+
+        final var dto = service.transfer(parameter);
+
+        Assertions.assertEquals(parameter.amount(), dto.amount());
+
+        final var payerWalletAfter = walletRepository.findById(payerSaved.getWallet().getId()).get();
+        final var payeeWalletAfter = walletRepository.findById(payeeSaved.getWallet().getId()).get();
+
+        Assertions.assertEquals(new BigDecimal("700"), payerWalletAfter.getAmount());
+        Assertions.assertEquals(new BigDecimal("800"), payeeWalletAfter.getAmount());
+    }
 
 }

@@ -46,8 +46,14 @@ public class TransactionServiceImpl implements TransactionService {
             throw new BusinessValidationException(payerField, "Merchants users only receive transfers, they do not send money to anyone");
         }
 
-        final var payerWallet = walletService.findByUserIdWithLock(parameter.payer());
-        final var payeeWallet = walletService.findByUserIdWithLock(parameter.payee());
+        final Long firstId = Math.min(parameter.payer(), parameter.payee());
+        final Long secondId = Math.max(parameter.payer(), parameter.payee());
+
+        final var firstWallet = walletService.findByUserIdWithLock(firstId);
+        final var secondWallet = walletService.findByUserIdWithLock(secondId);
+
+        final var payerWallet = firstId.equals(parameter.payer()) ? firstWallet : secondWallet;
+        final var payeeWallet = firstId.equals(parameter.payee()) ? firstWallet : secondWallet;
 
         if (payerWallet.getAmount().compareTo(parameter.amount()) < 0) {
             throw new BusinessValidationException(payerField, "Payer does not have a balance in their wallet");
