@@ -3,6 +3,7 @@ package br.com.wferreiracosta.louis.controllers;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.parameters.TransactionParameter;
+import br.com.wferreiracosta.louis.repositories.TransactionRepository;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
 import com.google.gson.Gson;
@@ -36,6 +37,9 @@ class TransactionControllerTest extends ControllerTestAnnotations {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @BeforeEach
     void setUp() {
@@ -260,6 +264,44 @@ class TransactionControllerTest extends ControllerTestAnnotations {
         final var payeeResult = repository.findById(payeeSaved.getId()).get();
         final var payeeAmountExpected = walletPayee.getAmount().add(parameter.amount());
         assertEquals(0, payeeAmountExpected.compareTo(payeeResult.getWallet().getAmount()));
+    }
+
+    @Test
+    void transferWithErrorBecauseSelfTransferNotAllowed() throws Exception {
+        final var wallet = WalletEntity.builder()
+                .amount(new BigDecimal(10))
+                .createdDate(now())
+                .build();
+
+        final var user = UserEntity.builder()
+                .name("Marcos")
+                .surname("Silva")
+                .document(cpf())
+                .email(email())
+                .type(COMMON)
+                .wallet(wallet)
+                .build();
+        wallet.setUser(user);
+        final var userSaved = repository.save(user);
+
+        final var initialTransactionsCount = transactionRepository.count();
+
+        final var parameter = new TransactionParameter(new BigDecimal(5), userSaved.getId(), userSaved.getId());
+
+        final var request = MockMvcRequestBuilders
+                .post(urlTransaction)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(parameter));
+
+        this.mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value("Errors"))
+                .andExpect(jsonPath("$.errors[0].fieldName").value("payer"))
+                .andExpect(jsonPath("$.errors[0].message").value("Self-transfer is not allowed"));
+
+        assertEquals(initialTransactionsCount, transactionRepository.count());
     }
 
 }

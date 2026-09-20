@@ -31,6 +31,10 @@ public class TransactionServiceImpl implements TransactionService {
         final var payerField = "payer";
         final var payeeField = "payee";
 
+        if (parameter.payer().equals(parameter.payee())) {
+            throw new BusinessValidationException(payerField, "Self-transfer is not allowed");
+        }
+
         final var userPayer = userRepository.findById(parameter.payer());
         if (userPayer.isEmpty()) {
             throw new BusinessValidationException(payerField, format("User payer with id %s not exists", parameter.payer()));
