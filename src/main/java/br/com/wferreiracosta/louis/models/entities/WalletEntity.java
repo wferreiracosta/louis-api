@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,8 +33,10 @@ public class WalletEntity {
     @Column(precision = 12, scale = 2)
     private BigDecimal amount;
 
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @UpdateTimestamp
     private LocalDateTime updateDate;
 
     @OneToOne
