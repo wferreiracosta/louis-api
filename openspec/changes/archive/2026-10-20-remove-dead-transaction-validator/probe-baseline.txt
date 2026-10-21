@@ -1,0 +1,9 @@
+PROBE amount-null payload={"amount":null,"payer":1,"payee":2} outcome=EXCEPTION java.lang.NullPointerException
+PROBE amount-absent payload={"payer":1,"payee":2} outcome=EXCEPTION java.lang.NullPointerException
+PROBE payer-null payload={"amount":5,"payer":null,"payee":2} outcome=EXCEPTION java.lang.NullPointerException
+PROBE payer-absent payload={"amount":5,"payee":2} outcome=EXCEPTION java.lang.NullPointerException
+PROBE payee-null payload={"amount":5,"payer":1,"payee":null} outcome=EXCEPTION java.lang.IllegalArgumentException
+PROBE payee-absent payload={"amount":5,"payer":1} outcome=EXCEPTION java.lang.IllegalArgumentException
+PROBE zero payload={"amount":0,"payer":1,"payee":2} outcome=201 {"amount":0,"payer":{"name":"payer","surname":"Probe","email":"payer@probe.test"},"payee":{"name":"payee","surname":"Probe","email":"payee@probe.test"}}
+PROBE negative payload={"amount":-5,"payer":1,"payee":2} outcome=201 {"amount":-5,"payer":{"name":"payer","surname":"Probe","email":"payer@probe.test"},"payee":{"name":"payee","surname":"Probe","email":"payee@probe.test"}}
+PROBE wrong-type payload={"amount":"invalid","payer":1,"payee":2} outcome=400 {"status":400,"message":"JSON parse error: Cannot deserialize value of type `java.math.BigDecimal` from String \"invalid\": not a valid representation"}
