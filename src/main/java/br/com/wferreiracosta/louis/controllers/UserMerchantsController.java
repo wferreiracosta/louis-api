@@ -32,6 +32,12 @@ public interface UserMerchantsController {
     @ApiResponse(responseCode = "500", content = {
             @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
     })
+    @ApiResponse(responseCode = "400", description = "Invalid required fields", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "422", description = "Document and/or email already registered; all detected conflicts are returned", content = {
+            @Content(schema = @Schema(implementation = ValidationError.class), mediaType = "application/json")
+    })
     UserResponseDTO save(UserParameter parameter);
 
     @GetMapping("/page")
