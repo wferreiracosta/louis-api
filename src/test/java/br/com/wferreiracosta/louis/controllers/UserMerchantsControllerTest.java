@@ -65,7 +65,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .andExpect(jsonPath("$.type").value(MERCHANT.name()))
                 .andExpect(jsonPath("$.email").value(user.email()))
                 .andExpect(jsonPath("$.wallet.id").isNotEmpty())
-                .andExpect(jsonPath("$.wallet.amount").isNotEmpty())
+                .andExpect(jsonPath("$.wallet.amount").value(0))
                 .andExpect(jsonPath("$.wallet.createdDate").isNotEmpty())
                 .andExpect(jsonPath("$.wallet.updateDate").isNotEmpty());
     }
@@ -215,8 +215,8 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .content(gson.toJson(user));
 
         this.mvc.perform(request)
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("document"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this document"));
@@ -247,8 +247,8 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .content(gson.toJson(user));
 
         this.mvc.perform(request)
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.message").value("Errors"))
                 .andExpect(jsonPath("$.errors[0].fieldName").value("email"))
                 .andExpect(jsonPath("$.errors[0].message").value("There is already a user registered with this email"));

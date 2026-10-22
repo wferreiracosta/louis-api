@@ -14,10 +14,17 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Comparator.comparing;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(UserUniquenessValidationException.class)
+    public ResponseEntity<ValidationError> userUniquenessValidation(final UserUniquenessValidationException e) {
+        final var error = map(UNPROCESSABLE_ENTITY.value(), "Errors", currentTimeMillis(), e.getErrors());
+        return ResponseEntity.status(UNPROCESSABLE_ENTITY).body(error);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationError> methodArgumentNotValid(final MethodArgumentNotValidException e) {

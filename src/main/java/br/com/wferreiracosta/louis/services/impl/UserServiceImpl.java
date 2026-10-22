@@ -1,6 +1,8 @@
 package br.com.wferreiracosta.louis.services.impl;
 
 import br.com.wferreiracosta.louis.exceptions.ObjectNotFoundException;
+import br.com.wferreiracosta.louis.exceptions.FieldMessage;
+import br.com.wferreiracosta.louis.exceptions.UserUniquenessValidationException;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
 import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.enums.UserType;
@@ -13,9 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static java.lang.String.format;
 
@@ -27,7 +31,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
+    @Transactional
     public UserEntity save(final UserParameter parameter, final UserType type) {
+        final var errors = new ArrayList<FieldMessage>();
+        if (repository.findByDocument(parameter.document()).isPresent()) {
+            errors.add(new FieldMessage("document", "There is already a user registered with this document"));
+        }
+        if (repository.findByEmail(parameter.email()).isPresent()) {
+            errors.add(new FieldMessage("email", "There is already a user registered with this email"));
+        }
+        if (!errors.isEmpty()) {
+            throw new UserUniquenessValidationException(errors);
+        }
+
         final var wallet = WalletEntity.builder()
                 .amount(new BigDecimal("0"))
                 .createdDate(LocalDateTime.now())
