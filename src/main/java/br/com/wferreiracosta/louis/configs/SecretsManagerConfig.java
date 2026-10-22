@@ -3,7 +3,8 @@ package br.com.wferreiracosta.louis.configs;
 import br.com.wferreiracosta.louis.configs.properties.AwsProperties;
 import br.com.wferreiracosta.louis.configs.properties.SecretsManagerProperties;
 import br.com.wferreiracosta.louis.exceptions.ConfigurationException;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,7 @@ import static software.amazon.awssdk.auth.credentials.StaticCredentialsProvider.
 public class SecretsManagerConfig {
 
     private final AwsProperties awsProperties;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecretsManagerProperties secretsManager() {
@@ -67,9 +69,13 @@ public class SecretsManagerConfig {
             throw new ConfigurationException(message);
         }
 
-        final var gson = new Gson();
-
-        return gson.fromJson(value.get(), SecretsManagerProperties.class);
+        try {
+            return objectMapper.readValue(value.get(), SecretsManagerProperties.class);
+        } catch (JsonProcessingException e) {
+            final var message = "Failed to parse Secrets Manager response";
+            log.error(message);
+            throw new ConfigurationException(message);
+        }
     }
 
 }

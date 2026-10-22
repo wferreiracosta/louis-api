@@ -5,7 +5,7 @@ import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
     private final String urlMerchantsPage = "/users/merchants/page";
 
     @Autowired
-    private Gson gson;
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mvc;
@@ -54,7 +54,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isCreated())
@@ -84,7 +84,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -108,7 +108,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -132,7 +132,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -156,7 +156,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -180,7 +180,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -212,7 +212,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isUnprocessableEntity())
@@ -244,7 +244,7 @@ class UserMerchantsControllerTest extends ControllerTestAnnotations {
                 .post(urlMerchants)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isUnprocessableEntity())
