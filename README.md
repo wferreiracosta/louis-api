@@ -33,7 +33,7 @@ This project adopts the [OpenSpec](openspec/) framework for requirements managem
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/wferreiracosta/jonah-api.git
+    git clone https://github.com/wferreiracosta/louis-api.git
     ```
 
 2. **Build and Run with Docker**:
