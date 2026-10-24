@@ -6,8 +6,7 @@ import br.com.wferreiracosta.louis.models.parameters.TransactionParameter;
 import br.com.wferreiracosta.louis.repositories.TransactionRepository;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
-import com.google.gson.Gson;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,7 +29,8 @@ class TransactionControllerTest extends ControllerTestAnnotations {
 
     private final String urlTransaction = "/transaction";
 
-    private Gson gson;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mvc;
@@ -40,11 +40,6 @@ class TransactionControllerTest extends ControllerTestAnnotations {
 
     @Autowired
     private TransactionRepository transactionRepository;
-
-    @BeforeEach
-    void setUp() {
-        gson = new Gson();
-    }
 
     @Test
     void transferWithErrorBecauseUserPayerNotExists() throws Exception {
@@ -62,7 +57,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .post(urlTransaction)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(parameter));
+                .content(objectMapper.writeValueAsString(parameter));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -96,7 +91,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .post(urlTransaction)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(parameter));
+                .content(objectMapper.writeValueAsString(parameter));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -146,7 +141,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .post(urlTransaction)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(parameter));
+                .content(objectMapper.writeValueAsString(parameter));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -196,7 +191,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .post(urlTransaction)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(parameter));
+                .content(objectMapper.writeValueAsString(parameter));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -244,7 +239,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .post(urlTransaction)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(parameter));
+                .content(objectMapper.writeValueAsString(parameter));
 
         this.mvc.perform(request)
                 .andExpect(status().isCreated())
@@ -292,7 +287,7 @@ class TransactionControllerTest extends ControllerTestAnnotations {
                 .post(urlTransaction)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(parameter));
+                .content(objectMapper.writeValueAsString(parameter));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())

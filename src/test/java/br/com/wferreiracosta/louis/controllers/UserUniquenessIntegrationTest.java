@@ -6,7 +6,7 @@ import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.repositories.WalletRepository;
 import br.com.wferreiracosta.louis.services.UserService;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class UserUniquenessIntegrationTest {
+    @Autowired private ObjectMapper objectMapper;
     @Autowired private MockMvc mvc;
     @Autowired private UserService service;
     @SpyBean private UserRepository users;
@@ -51,7 +52,7 @@ class UserUniquenessIntegrationTest {
         final long beforeUsers = users.count();
         final long beforeWallets = wallets.count();
         mvc.perform(post("/users/" + route).contentType(MediaType.APPLICATION_JSON)
-                        .content(new Gson().toJson(new UserParameter("Pedro", "Silva", "123", "taken@mail.com", "secret"))))
+                        .content(objectMapper.writeValueAsString(new UserParameter("Pedro", "Silva", "123", "taken@mail.com", "secret"))))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.message").value("Errors"))
@@ -71,7 +72,7 @@ class UserUniquenessIntegrationTest {
         users.save(UserEntity.builder().document("123").email("taken@mail.com").build());
         clearInvocations(users);
         mvc.perform(post("/users/" + route).contentType(MediaType.APPLICATION_JSON)
-                        .content(new Gson().toJson(new UserParameter("", "Silva", "123", "taken@mail.com", "secret"))))
+                        .content(objectMapper.writeValueAsString(new UserParameter("", "Silva", "123", "taken@mail.com", "secret"))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.errors.length()").value(1))

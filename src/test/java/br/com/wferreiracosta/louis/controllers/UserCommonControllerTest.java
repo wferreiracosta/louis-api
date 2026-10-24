@@ -5,8 +5,7 @@ import br.com.wferreiracosta.louis.models.entities.WalletEntity;
 import br.com.wferreiracosta.louis.models.parameters.UserParameter;
 import br.com.wferreiracosta.louis.repositories.UserRepository;
 import br.com.wferreiracosta.louis.utils.ControllerTestAnnotations;
-import com.google.gson.Gson;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,18 +31,14 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
     private final String urlCommon = "/users/common";
     private final String urlCommonPage = "/users/common/page";
 
-    private Gson gson;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private UserRepository repository;
-
-    @BeforeEach
-    void setUp() {
-        gson = new Gson();
-    }
 
     @Test
     void testingSaveUserCommonWithSucess() throws Exception {
@@ -59,7 +54,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isCreated())
@@ -89,7 +84,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -113,7 +108,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -137,7 +132,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -161,7 +156,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -185,7 +180,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -217,7 +212,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isUnprocessableEntity())
@@ -249,7 +244,7 @@ class UserCommonControllerTest extends ControllerTestAnnotations {
                 .post(urlCommon)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(user));
+                .content(objectMapper.writeValueAsString(user));
 
         this.mvc.perform(request)
                 .andExpect(status().isUnprocessableEntity())
