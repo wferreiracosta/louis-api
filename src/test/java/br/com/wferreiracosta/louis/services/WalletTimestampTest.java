@@ -23,7 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Import({TransactionServiceImpl.class, WalletServiceImpl.class, UserServiceImpl.class})
+@Import({TransactionServiceImpl.class, WalletServiceImpl.class, UserServiceImpl.class,
+        br.com.wferreiracosta.louis.configs.PasswordConfig.class})
 class WalletTimestampTest {
 
     @Autowired

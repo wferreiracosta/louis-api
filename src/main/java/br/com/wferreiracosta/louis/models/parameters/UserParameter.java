@@ -2,6 +2,7 @@ package br.com.wferreiracosta.louis.models.parameters;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import br.com.wferreiracosta.louis.validation.PasswordLength;
 
 public record UserParameter(
 
@@ -23,6 +24,11 @@ public record UserParameter(
 
         @Schema(description = "User password", example = "123")
         @NotBlank(message = "Filling in your password is mandatory")
+        @PasswordLength
         String password
 ) {
+    @Override
+    public String toString() {
+        return "UserParameter[credentials redacted]";
+    }
 }
