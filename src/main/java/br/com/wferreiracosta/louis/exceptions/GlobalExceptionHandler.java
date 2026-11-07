@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<StandardError> httpMessageNotReadable(final HttpMessageNotReadableException e) {
-        final var err = map(BAD_REQUEST.value(), e.getLocalizedMessage(), currentTimeMillis());
+        final var err = map(BAD_REQUEST.value(), "Malformed JSON request", currentTimeMillis());
         return ResponseEntity.status(BAD_REQUEST).body(err);
     }
 

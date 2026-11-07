@@ -33,7 +33,7 @@ class WalletServiceTest extends ServiceTestAnnotations {
 
     @BeforeEach
     void setUp() {
-        final var userService = new UserServiceImpl(userRepository);
+        final var userService = new UserServiceImpl(userRepository, new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder());
         service = new WalletServiceImpl(repository, userService);
     }
 

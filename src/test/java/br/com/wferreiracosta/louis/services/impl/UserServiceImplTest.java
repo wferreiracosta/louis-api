@@ -24,6 +24,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     @Mock private UserRepository repository;
+    @org.mockito.Spy private org.springframework.security.crypto.password.PasswordEncoder encoder =
+            new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     @InjectMocks private UserServiceImpl service;
     private final UserParameter parameter = new UserParameter("Pedro", "Silva", "123", "pedro@mail.com", "secret");
 
@@ -52,6 +54,8 @@ class UserServiceImplTest {
         when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
         final var user = service.save(parameter, type);
         assertEquals(type, user.getType());
+        assertTrue(encoder.matches(parameter.password(), user.getPassword()));
+        assertEquals("BCRYPT", user.getPasswordEncoding());
         assertEquals(parameter.document(), user.getDocument());
         assertEquals(parameter.email(), user.getEmail());
         assertEquals(0, BigDecimal.ZERO.compareTo(user.getWallet().getAmount()));
@@ -60,5 +64,28 @@ class UserServiceImplTest {
         order.verify(repository).findByDocument(parameter.document());
         order.verify(repository).findByEmail(parameter.email());
         order.verify(repository).save(user);
+    }
+
+    @org.junit.jupiter.api.Test
+    void encodingFailureDoesNotPersist() {
+        doThrow(new IllegalStateException("encoder unavailable")).when(encoder).encode(anyString());
+        assertThrows(IllegalStateException.class, () -> service.save(parameter, UserType.COMMON));
+        verify(repository, never()).save(any());
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.NullAndEmptySource
+    @org.junit.jupiter.params.provider.ValueSource(strings = {" ", "\t"})
+    void mandatoryPasswordAppliesToDirectService(String password) {
+        assertThrows(br.com.wferreiracosta.louis.exceptions.BusinessValidationException.class,
+                () -> service.save(new UserParameter("A", "B", "1", "a@b", password), UserType.COMMON));
+        verifyNoInteractions(repository, encoder);
+    }
+
+    @org.junit.jupiter.api.Test
+    void oversizedPasswordPrecedesUniqueness() {
+        assertThrows(br.com.wferreiracosta.louis.exceptions.BusinessValidationException.class,
+                () -> service.save(new UserParameter("A", "B", "1", "a@b", "é".repeat(37)), UserType.COMMON));
+        verifyNoInteractions(repository, encoder);
     }
 }

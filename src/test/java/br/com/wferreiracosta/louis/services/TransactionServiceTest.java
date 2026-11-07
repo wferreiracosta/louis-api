@@ -40,7 +40,7 @@ class TransactionServiceTest extends ServiceTestAnnotations {
 
     @BeforeEach
     public void setUp() {
-        final var userService = new UserServiceImpl(userRepository);
+        final var userService = new UserServiceImpl(userRepository, new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder());
         final var walletService = new WalletServiceImpl(walletRepository, userService);
         service = new TransactionServiceImpl(walletService, repository, userRepository);
     }

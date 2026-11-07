@@ -1,6 +1,9 @@
 package br.com.wferreiracosta.louis.services.impl;
 
 import br.com.wferreiracosta.louis.exceptions.ObjectNotFoundException;
+import br.com.wferreiracosta.louis.exceptions.BusinessValidationException;
+import br.com.wferreiracosta.louis.validation.PasswordLengthValidator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import br.com.wferreiracosta.louis.exceptions.FieldMessage;
 import br.com.wferreiracosta.louis.exceptions.UserUniquenessValidationException;
 import br.com.wferreiracosta.louis.models.entities.UserEntity;
@@ -29,10 +32,17 @@ import static java.lang.String.format;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public UserEntity save(final UserParameter parameter, final UserType type) {
+        if (parameter.password() == null || parameter.password().isBlank()) {
+            throw new BusinessValidationException("password", "Filling in your password is mandatory");
+        }
+        if (!PasswordLengthValidator.withinLimit(parameter.password())) {
+            throw new BusinessValidationException("password", PasswordLengthValidator.MESSAGE);
+        }
         final var errors = new ArrayList<FieldMessage>();
         if (repository.findByDocument(parameter.document()).isPresent()) {
             errors.add(new FieldMessage("document", "There is already a user registered with this document"));
@@ -50,7 +60,11 @@ public class UserServiceImpl implements UserService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        final var user = new UserEntity(parameter);
+        final var user = UserEntity.builder()
+                .name(parameter.name()).surname(parameter.surname())
+                .document(parameter.document()).email(parameter.email())
+                .password(passwordEncoder.encode(parameter.password()))
+                .passwordEncoding("BCRYPT").build();
         user.setWallet(wallet);
         wallet.setUser(user);
 

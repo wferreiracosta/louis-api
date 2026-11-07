@@ -31,7 +31,7 @@ class UserServiceTest extends ServiceTestAnnotations {
 
     @BeforeEach
     public void setUp() {
-        service = new UserServiceImpl(repository);
+        service = new UserServiceImpl(repository, new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder());
     }
 
     @Test
@@ -44,10 +44,7 @@ class UserServiceTest extends ServiceTestAnnotations {
                 "123"
         );
 
-        final var entity = new UserEntity(wesley);
-        entity.setType(MERCHANT);
-
-        when(repository.save(entity)).thenReturn(entity);
+        when(repository.save(any(UserEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         final var entitySaved = service.save(wesley, MERCHANT);
 
@@ -55,7 +52,10 @@ class UserServiceTest extends ServiceTestAnnotations {
         assertEquals(wesley.document(), entitySaved.getDocument());
         assertEquals(MERCHANT, entitySaved.getType());
         assertEquals(wesley.email(), entitySaved.getEmail());
-        assertEquals(wesley.password(), entitySaved.getPassword());
+        org.junit.jupiter.api.Assertions.assertTrue(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
+                .matches(wesley.password(), entitySaved.getPassword()));
+        assertEquals("BCRYPT", entitySaved.getPasswordEncoding());
+        verify(repository).save(entitySaved);
     }
 
     @Test
