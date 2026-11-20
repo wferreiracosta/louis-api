@@ -4,11 +4,10 @@ import br.com.wferreiracosta.louis.configs.properties.SecretsManagerProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
-import javax.sql.DataSource;
 
 import static java.lang.String.format;
 
@@ -21,7 +20,8 @@ public class DataSourceConfig {
     private final SecretsManagerProperties properties;
 
     @Bean
-    public DataSource dataSource() {
+    @ConfigurationProperties(prefix = "spring.datasource.hikari")
+    public HikariDataSource dataSource() {
         final var url = format("jdbc:%s://%s:%s/%s",
                 properties.engine(), properties.host(),
                 properties.port(), properties.database());
