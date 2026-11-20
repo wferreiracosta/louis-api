@@ -16,15 +16,21 @@ A configuração comum em `application.properties` SHALL NOT definir `spring.jpa
 - **THEN** a configuração comum SHALL NOT impor uma estratégia `ddl-auto` de ambiente
 - **THEN** a seleção de perfil SHALL permanecer sob controle da configuração de execução
 
-### Requirement: O perfil local deve atualizar o schema sem recriá-lo
+### Requirement: O perfil local deve somente validar o schema
 
-Quando o perfil `lcl` estiver ativo, `application-lcl.properties` SHALL definir `spring.jpa.hibernate.ddl-auto=update`.
+Quando o perfil `lcl` estiver ativo, `application-lcl.properties` SHALL definir `spring.jpa.hibernate.ddl-auto=validate`. O Hibernate SHALL validar o schema após a execução das migrações versionadas e SHALL NOT criar, alterar, remover ou recriar objetos do schema automaticamente.
 
 #### Scenario: Inicialização local
 
-- **WHEN** a aplicação inicia com o perfil `lcl` ativo
-- **THEN** o Hibernate SHALL usar a estratégia `update`
-- **THEN** o Hibernate SHALL NOT remover e recriar o schema integralmente durante a inicialização
+- **WHEN** a aplicação inicia com o perfil `lcl` ativo após o gerenciamento do schema pelas migrações versionadas
+- **THEN** o Hibernate SHALL usar a estratégia `validate`
+- **THEN** a inicialização SHALL ser concluída sem o Hibernate executar DDL de criação, alteração ou remoção
+
+#### Scenario: Inicialização local com schema incompatível
+
+- **WHEN** a aplicação inicia com o perfil `lcl` ativo contra um schema ausente ou divergente das entidades JPA após a fase de migração
+- **THEN** a inicialização SHALL falhar na validação do Hibernate
+- **THEN** o Hibernate SHALL NOT alterar automaticamente o schema local
 
 ### Requirement: Homologação e produção devem somente validar o schema
 
@@ -44,13 +50,13 @@ Quando os perfis `qa` ou `prd` estiverem ativos, seus respectivos arquivos de pe
 
 ### Requirement: O perfil de testes deve usar schema descartável
 
-Quando o perfil `test` estiver ativo, a configuração de testes SHALL sobrescrever a política comum com `spring.jpa.hibernate.ddl-auto=create-drop`. O schema do datasource H2 em memória SHALL ser criado para a execução dos testes e removido ao encerrar o contexto Hibernate.
+Quando o perfil `test` estiver ativo, a configuração de testes SHALL sobrescrever a política comum com `spring.jpa.hibernate.ddl-auto=create-drop` e desabilitar a execução automática do Flyway (`spring.flyway.enabled=false`). O schema do datasource H2 em memória SHALL ser criado pelo Hibernate para a execução dos testes e removido ao encerrar o contexto Hibernate.
 
 #### Scenario: Execução de teste de integração com o perfil test
 
 - **WHEN** um teste de integração é executado com o perfil `test` ativo
-- **THEN** o Hibernate SHALL criar o schema necessário no datasource H2 em memória antes do uso dos repositórios
-- **THEN** os testes SHALL poder persistir entidades sem depender de um schema pré-existente
+- **THEN** as migrações Flyway SHALL permanecer desabilitadas e o Hibernate SHALL criar o schema necessário no datasource H2 em memória antes do uso dos repositórios
+- **THEN** os testes SHALL poder persistir entidades sem depender de um schema pré-existente ou de migrações PostgreSQL
 
 #### Scenario: Encerramento do contexto de teste
 

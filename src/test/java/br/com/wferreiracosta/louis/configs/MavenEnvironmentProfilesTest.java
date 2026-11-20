@@ -57,11 +57,11 @@ class MavenEnvironmentProfilesTest {
     }
 
     @Test
-    @DisplayName("Profile 'lcl' configures spring.jpa.hibernate.ddl-auto=update")
-    void lclProfileConfiguresDdlAutoUpdate() {
+    @DisplayName("Profile 'lcl' configures spring.jpa.hibernate.ddl-auto=validate")
+    void lclProfileConfiguresDdlAutoValidate() {
         assertThat(ddlAutoForProfile("lcl"))
-                .as("application-lcl.properties must define ddl-auto=update")
-                .isEqualTo("update");
+                .as("application-lcl.properties must define ddl-auto=validate")
+                .isEqualTo("validate");
     }
 
     @Test
