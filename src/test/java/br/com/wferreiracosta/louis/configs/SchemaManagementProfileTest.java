@@ -28,7 +28,7 @@ class SchemaManagementProfileTest {
     class ProfilePropertyResolutionTests {
 
         @Test
-        @DisplayName("When no profile is explicitly set, spring.profiles.default=lcl activates the lcl profile (ddl-auto=update)")
+        @DisplayName("When no profile is explicitly set, spring.profiles.default=lcl activates the lcl profile (ddl-auto=validate)")
         void defaultProfileActivatesLclWhenNoProfileIsSet() {
             try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                     .web(WebApplicationType.NONE)
@@ -37,27 +37,33 @@ class SchemaManagementProfileTest {
                 ConfigurableEnvironment env = context.getEnvironment();
                 // With spring.profiles.default=@activatedProperties@ filtered by Maven (defaulting to lcl),
                 // the lcl profile is activated when no profile is explicitly set,
-                // causing application-lcl.properties (ddl-auto=update) to be loaded.
+                // causing application-lcl.properties (ddl-auto=validate) to be loaded.
                 assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto"))
-                        .as("Default Maven profile (lcl) should set ddl-auto=update via application-lcl.properties")
-                        .isEqualTo("update");
+                        .as("Default Maven profile (lcl) should set ddl-auto=validate via application-lcl.properties")
+                        .isEqualTo("validate");
+                assertThat(env.getProperty("spring.flyway.enabled")).isEqualTo("true");
+                assertThat(env.getProperty("spring.flyway.locations")).isEqualTo("classpath:db/migration");
+                assertThat(env.getProperty("spring.flyway.baseline-on-migrate")).isEqualTo("true");
+                assertThat(env.getProperty("spring.flyway.baseline-version")).isEqualTo("3");
             }
         }
 
         @Test
-        @DisplayName("Profile 'lcl' must set spring.jpa.hibernate.ddl-auto to 'update'")
-        void lclProfileSetsDdlAutoToUpdate() {
+        @DisplayName("Profile 'lcl' must set spring.jpa.hibernate.ddl-auto to 'validate' with Flyway enabled")
+        void lclProfileSetsDdlAutoToValidate() {
             try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                     .web(WebApplicationType.NONE)
                     .profiles("lcl")
                     .run()) {
                 ConfigurableEnvironment env = context.getEnvironment();
-                assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("update");
+                assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("validate");
+                assertThat(env.getProperty("spring.flyway.enabled")).isEqualTo("true");
+                assertThat(env.getProperty("spring.flyway.baseline-version")).isEqualTo("3");
             }
         }
 
         @Test
-        @DisplayName("Profile 'qa' must set spring.jpa.hibernate.ddl-auto to 'validate'")
+        @DisplayName("Profile 'qa' must set spring.jpa.hibernate.ddl-auto to 'validate' with Flyway enabled")
         void qaProfileSetsDdlAutoToValidate() {
             try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                     .web(WebApplicationType.NONE)
@@ -65,11 +71,13 @@ class SchemaManagementProfileTest {
                     .run()) {
                 ConfigurableEnvironment env = context.getEnvironment();
                 assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("validate");
+                assertThat(env.getProperty("spring.flyway.enabled")).isEqualTo("true");
+                assertThat(env.getProperty("spring.flyway.baseline-version")).isEqualTo("3");
             }
         }
 
         @Test
-        @DisplayName("Profile 'prd' must set spring.jpa.hibernate.ddl-auto to 'validate'")
+        @DisplayName("Profile 'prd' must set spring.jpa.hibernate.ddl-auto to 'validate' with Flyway enabled")
         void prdProfileSetsDdlAutoToValidate() {
             try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                     .web(WebApplicationType.NONE)
@@ -77,11 +85,13 @@ class SchemaManagementProfileTest {
                     .run()) {
                 ConfigurableEnvironment env = context.getEnvironment();
                 assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("validate");
+                assertThat(env.getProperty("spring.flyway.enabled")).isEqualTo("true");
+                assertThat(env.getProperty("spring.flyway.baseline-version")).isEqualTo("3");
             }
         }
 
         @Test
-        @DisplayName("Profile 'test' must set spring.jpa.hibernate.ddl-auto to 'create-drop'")
+        @DisplayName("Profile 'test' must set spring.jpa.hibernate.ddl-auto to 'create-drop' and disable Flyway")
         void testProfileSetsDdlAutoToCreateDrop() {
             try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                     .web(WebApplicationType.NONE)
@@ -89,13 +99,14 @@ class SchemaManagementProfileTest {
                     .run()) {
                 ConfigurableEnvironment env = context.getEnvironment();
                 assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("create-drop");
+                assertThat(env.getProperty("spring.flyway.enabled")).isEqualTo("false");
             }
         }
 
         @Test
         @DisplayName("Profile property resolution when spring.profiles.active is supplied")
         void springProfilesActiveActivatesProfileWithValidate() {
-            for (String profile : new String[]{"qa", "prd"}) {
+            for (String profile : new String[]{"lcl", "qa", "prd"}) {
                 try (ConfigurableApplicationContext context = new SpringApplicationBuilder(EmptyConfig.class)
                         .web(WebApplicationType.NONE)
                         .properties("spring.profiles.active=" + profile)
@@ -103,6 +114,7 @@ class SchemaManagementProfileTest {
                     ConfigurableEnvironment env = context.getEnvironment();
                     assertThat(env.getActiveProfiles()).contains(profile);
                     assertThat(env.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("validate");
+                    assertThat(env.getProperty("spring.flyway.enabled")).isEqualTo("true");
                 }
             }
         }
@@ -139,45 +151,14 @@ class SchemaManagementProfileTest {
         }
 
         @Test
-        @DisplayName("2.2 - Profile 'lcl' with 'update' initializes schema without dropping existing tables")
-        void lclUpdateCreatesAndPreservesSchema() throws Exception {
-            String dbName = "lcl_test_db";
-            DataSource ds = createH2DataSource(dbName);
-
-            // First run: update creates the tables
-            LocalContainerEntityManagerFactoryBean em1 = createEntityManagerFactory(ds, "update");
-            em1.afterPropertiesSet();
-
-            // Insert data
-            try (Connection conn = ds.getConnection();
-                 Statement stmt = conn.createStatement()) {
-                stmt.executeUpdate("INSERT INTO users (id, name, surname, document, email, password, type) " +
-                        "VALUES (1, 'John', 'Doe', '12345678901', 'john@test.com', 'pass', 'COMMON')");
-            }
-            em1.destroy();
-
-            // Second run: update preserves data and doesn't drop schema
-            LocalContainerEntityManagerFactoryBean em2 = createEntityManagerFactory(ds, "update");
-            em2.afterPropertiesSet();
-
-            try (Connection conn = ds.getConnection();
-                 Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT count(*) FROM users WHERE id = 1")) {
-                assertThat(rs.next()).isTrue();
-                assertThat(rs.getInt(1)).isEqualTo(1);
-            }
-            em2.destroy();
-        }
-
-        @Test
-        @DisplayName("2.3 & 2.4 - Profiles 'qa' and 'prd' with 'validate' succeed on compatible schema and preserve data")
-        void qaAndPrdValidateSucceedsAndPreservesData() throws Exception {
-            for (String profile : new String[]{"qa", "prd"}) {
+        @DisplayName("Profiles 'lcl', 'qa' and 'prd' with 'validate' succeed on compatible schema and preserve data")
+        void appProfilesValidateSucceedsAndPreservesData() throws Exception {
+            for (String profile : new String[]{"lcl", "qa", "prd"}) {
                 String dbName = profile + "_compatible_db";
                 DataSource ds = createH2DataSource(dbName);
 
-                // Step 1: Initialize compatible schema using update (simulating provisioned schema)
-                LocalContainerEntityManagerFactoryBean setupEm = createEntityManagerFactory(ds, "update");
+                // Step 1: Initialize compatible schema (simulating Flyway-provisioned schema)
+                LocalContainerEntityManagerFactoryBean setupEm = createEntityManagerFactory(ds, "create");
                 setupEm.afterPropertiesSet();
 
                 // Step 2: Insert data into the database
@@ -188,11 +169,11 @@ class SchemaManagementProfileTest {
                 }
                 setupEm.destroy();
 
-                // Step 3 (2.3): Start with 'validate' against compatible schema -> succeeds without DDL errors
+                // Step 3: Start with 'validate' against compatible schema -> succeeds without DDL errors
                 LocalContainerEntityManagerFactoryBean validateEm1 = createEntityManagerFactory(ds, "validate");
                 validateEm1.afterPropertiesSet();
 
-                // Step 4 (2.4): Verify data is still intact
+                // Step 4: Verify data is still intact
                 try (Connection conn = ds.getConnection();
                      Statement stmt = conn.createStatement();
                      ResultSet rs = stmt.executeQuery("SELECT count(*) FROM users WHERE id = 10")) {
@@ -201,7 +182,7 @@ class SchemaManagementProfileTest {
                 }
                 validateEm1.destroy();
 
-                // Step 5 (2.4): Restart application with 'validate' on the same database
+                // Step 5: Restart application with 'validate' on the same database
                 LocalContainerEntityManagerFactoryBean validateEm2 = createEntityManagerFactory(ds, "validate");
                 validateEm2.afterPropertiesSet();
 
@@ -216,9 +197,9 @@ class SchemaManagementProfileTest {
         }
 
         @Test
-        @DisplayName("2.5 - Profiles 'qa' and 'prd' with 'validate' fail on missing or incompatible schema")
-        void qaAndPrdValidateFailsOnMissingSchema() {
-            for (String profile : new String[]{"qa", "prd"}) {
+        @DisplayName("Profiles 'lcl', 'qa' and 'prd' with 'validate' fail on missing or incompatible schema")
+        void appProfilesValidateFailsOnMissingSchema() {
+            for (String profile : new String[]{"lcl", "qa", "prd"}) {
                 String dbName = profile + "_empty_db";
                 DataSource ds = createH2DataSource(dbName);
 
